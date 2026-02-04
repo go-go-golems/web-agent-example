@@ -81,6 +81,12 @@ func runWS(args []string) error {
 	ctx, stop := signal.NotifyContext(ctx, os.Interrupt)
 	defer stop()
 
+	go func() {
+		<-ctx.Done()
+		_ = conn.WriteControl(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, "closing"), time.Now().Add(time.Second))
+		_ = conn.Close()
+	}()
+
 	if opts.PingInterval > 0 {
 		go pingLoop(ctx, conn, opts.PingInterval)
 	}
@@ -92,6 +98,9 @@ func runWS(args []string) error {
 		default:
 			_, data, err := conn.ReadMessage()
 			if err != nil {
+				if ctx.Err() != nil {
+					return nil
+				}
 				return err
 			}
 			if err := renderWSFrame(data, opts); err != nil {
