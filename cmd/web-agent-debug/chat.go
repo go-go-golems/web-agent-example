@@ -49,49 +49,19 @@ func runChat(args []string) error {
 		}
 	}
 
+	convWasEmpty := strings.TrimSpace(opts.ConvID) == ""
 	convID := ensureConvID(opts.ConvID)
-	if opts.ConvID == "" {
+	opts.ConvID = convID
+	if convWasEmpty {
 		fmt.Fprintf(os.Stdout, "conv_id: %s\n", convID)
 	}
-	backend := normalizeBackend(opts.Backend)
-	path := chatPath(opts.Profile)
 
-	payload := map[string]any{
-		"conv_id": convID,
-		"prompt":  opts.Prompt,
-	}
-	if overrides := buildOverrides(opts.ThinkingMode); overrides != nil {
-		payload["overrides"] = overrides
-	}
-
-	body, err := json.Marshal(payload)
+	_, status, data, err := submitChat(opts)
 	if err != nil {
 		return err
 	}
-
-	req, err := http.NewRequest(http.MethodPost, backend+path, bytes.NewReader(body))
-	if err != nil {
-		return err
-	}
-	req.Header.Set("Content-Type", "application/json")
-	if opts.Profile != "" && opts.Profile != "default" && !hasCookie(opts.Cookies, "chat_profile") {
-		req.AddCookie(&http.Cookie{Name: "chat_profile", Value: opts.Profile})
-	}
-	if err := addCookies(req, opts.Cookies); err != nil {
-		return err
-	}
-
-	client := &http.Client{Timeout: opts.Timeout}
-	resp, err := client.Do(req)
-	if err != nil {
-		return err
-	}
-	data, err := readResponseBody(resp)
-	if err != nil {
-		return err
-	}
-	if resp.StatusCode >= 300 {
-		return fmt.Errorf("/chat failed: status=%d body=%s", resp.StatusCode, strings.TrimSpace(string(data)))
+	if status >= 300 {
+		return fmt.Errorf("/chat failed: status=%d body=%s", status, strings.TrimSpace(string(data)))
 	}
 
 	if opts.JSON {
@@ -105,4 +75,49 @@ func runChat(args []string) error {
 	}
 	fmt.Fprintln(os.Stdout, string(data))
 	return nil
+}
+
+func submitChat(opts *chatOptions) (string, int, []byte, error) {
+	if opts == nil {
+		return "", 0, nil, errors.New("missing chat options")
+	}
+	convID := ensureConvID(opts.ConvID)
+	backend := normalizeBackend(opts.Backend)
+	path := chatPath(opts.Profile)
+
+	payload := map[string]any{
+		"conv_id": convID,
+		"prompt":  opts.Prompt,
+	}
+	if overrides := buildOverrides(opts.ThinkingMode); overrides != nil {
+		payload["overrides"] = overrides
+	}
+
+	body, err := json.Marshal(payload)
+	if err != nil {
+		return convID, 0, nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, backend+path, bytes.NewReader(body))
+	if err != nil {
+		return convID, 0, nil, err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	if opts.Profile != "" && opts.Profile != "default" && !hasCookie(opts.Cookies, "chat_profile") {
+		req.AddCookie(&http.Cookie{Name: "chat_profile", Value: opts.Profile})
+	}
+	if err := addCookies(req, opts.Cookies); err != nil {
+		return convID, 0, nil, err
+	}
+
+	client := &http.Client{Timeout: opts.Timeout}
+	resp, err := client.Do(req)
+	if err != nil {
+		return convID, 0, nil, err
+	}
+	data, err := readResponseBody(resp)
+	if err != nil {
+		return convID, 0, nil, err
+	}
+	return convID, resp.StatusCode, data, nil
 }

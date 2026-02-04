@@ -57,10 +57,35 @@ func runTimeline(args []string) error {
 		return errors.New("missing --conv-id")
 	}
 
+	snap, data, err := fetchTimeline(opts)
+	if err != nil {
+		return err
+	}
+	if opts.JSON {
+		fmt.Fprintln(os.Stdout, string(data))
+		return nil
+	}
+	if opts.Pretty {
+		if err := prettyPrintJSON(data, os.Stdout); err == nil {
+			return nil
+		}
+	}
+	if snap == nil {
+		fmt.Fprintln(os.Stdout, string(data))
+		return nil
+	}
+	printTimelineSummary(os.Stdout, snap)
+	return nil
+}
+
+func fetchTimeline(opts *timelineOptions) (*timelineSnapshot, []byte, error) {
+	if opts == nil {
+		return nil, nil, errors.New("missing timeline options")
+	}
 	backend := normalizeBackend(opts.Backend)
 	u, err := url.Parse(backend + "/timeline")
 	if err != nil {
-		return err
+		return nil, nil, err
 	}
 	q := u.Query()
 	q.Set("conv_id", opts.ConvID)
@@ -74,39 +99,35 @@ func runTimeline(args []string) error {
 
 	req, err := http.NewRequest(http.MethodGet, u.String(), nil)
 	if err != nil {
-		return err
+		return nil, nil, err
 	}
 	if err := addCookies(req, opts.Cookies); err != nil {
-		return err
+		return nil, nil, err
 	}
 
 	client := &http.Client{Timeout: opts.Timeout}
 	resp, err := client.Do(req)
 	if err != nil {
-		return err
+		return nil, nil, err
 	}
 	data, err := readResponseBody(resp)
 	if err != nil {
-		return err
+		return nil, nil, err
 	}
 	if resp.StatusCode >= 300 {
-		return fmt.Errorf("/timeline failed: status=%d body=%s", resp.StatusCode, strings.TrimSpace(string(data)))
-	}
-
-	if opts.JSON {
-		fmt.Fprintln(os.Stdout, string(data))
-		return nil
-	}
-	if opts.Pretty {
-		if err := prettyPrintJSON(data, os.Stdout); err == nil {
-			return nil
-		}
+		return nil, data, fmt.Errorf("/timeline failed: status=%d body=%s", resp.StatusCode, strings.TrimSpace(string(data)))
 	}
 
 	var snap timelineSnapshot
 	if err := json.Unmarshal(data, &snap); err != nil {
-		fmt.Fprintln(os.Stdout, string(data))
-		return nil
+		return nil, data, nil
+	}
+	return &snap, data, nil
+}
+
+func printTimelineSummary(out *os.File, snap *timelineSnapshot) {
+	if snap == nil || out == nil {
+		return
 	}
 	counts := map[string]int{}
 	for _, e := range snap.Entities {
@@ -118,12 +139,11 @@ func runTimeline(args []string) error {
 	}
 	sort.Strings(kinds)
 
-	fmt.Fprintf(os.Stdout, "conv_id: %s\n", snap.ConvID)
-	fmt.Fprintf(os.Stdout, "version: %d\n", snap.Version)
-	fmt.Fprintf(os.Stdout, "server_time_ms: %d\n", snap.ServerTimeMs)
-	fmt.Fprintf(os.Stdout, "entities: %d\n", len(snap.Entities))
+	fmt.Fprintf(out, "conv_id: %s\n", snap.ConvID)
+	fmt.Fprintf(out, "version: %d\n", snap.Version)
+	fmt.Fprintf(out, "server_time_ms: %d\n", snap.ServerTimeMs)
+	fmt.Fprintf(out, "entities: %d\n", len(snap.Entities))
 	for _, k := range kinds {
-		fmt.Fprintf(os.Stdout, "  %s: %d\n", k, counts[k])
+		fmt.Fprintf(out, "  %s: %d\n", k, counts[k])
 	}
-	return nil
 }
