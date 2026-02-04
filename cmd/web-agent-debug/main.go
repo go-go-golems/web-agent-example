@@ -31,10 +31,21 @@ func usage() {
 }
 
 func runCommand(cmd string, args []string) error {
-	fs := flag.NewFlagSet(cmd, flag.ContinueOnError)
-	fs.SetOutput(os.Stderr)
-	if err := fs.Parse(args); err != nil {
-		return err
+	switch cmd {
+	case "chat":
+		return runChat(args)
+	case "ws":
+		return fmt.Errorf("command %s not implemented yet", cmd)
+	case "timeline":
+		return fmt.Errorf("command %s not implemented yet", cmd)
+	case "run":
+		return fmt.Errorf("command %s not implemented yet", cmd)
+	default:
+		fs := flag.NewFlagSet(cmd, flag.ContinueOnError)
+		fs.SetOutput(os.Stderr)
+		if err := fs.Parse(args); err != nil {
+			return err
+		}
+		return fmt.Errorf("command %s not implemented yet", cmd)
 	}
-	return fmt.Errorf("command %s not implemented yet", cmd)
 }
