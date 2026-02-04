@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --outDir ../static/dist",
+    "build": "vite build --outDir ../cmd/web-agent-example/static/dist",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "check": "bun run typecheck"
   },

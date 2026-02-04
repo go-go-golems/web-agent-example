@@ -13,7 +13,7 @@ export default defineConfig({
   },
   base: './',
   build: {
-    outDir: '../static/dist',
+    outDir: '../cmd/web-agent-example/static/dist',
     emptyOutDir: true,
     sourcemap: true,
   },
