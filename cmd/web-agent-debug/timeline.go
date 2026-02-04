@@ -21,14 +21,12 @@ type timelineOptions struct {
 }
 
 type timelineSnapshot struct {
-	ConvID       string `json:"conv_id"`
-	Version      uint64 `json:"version"`
-	ServerTimeMs int64  `json:"server_time_ms"`
+	ConvID       string          `json:"convId"`
+	Version      json.RawMessage `json:"version"`
+	ServerTimeMs json.RawMessage `json:"serverTimeMs"`
 	Entities     []struct {
-		EntityID    string `json:"entity_id"`
-		Kind        string `json:"kind"`
-		CreatedAtMs int64  `json:"created_at_ms"`
-		UpdatedAtMs int64  `json:"updated_at_ms"`
+		EntityID string `json:"entityId"`
+		Kind     string `json:"kind"`
 	} `json:"entities"`
 }
 
@@ -140,10 +138,18 @@ func printTimelineSummary(out *os.File, snap *timelineSnapshot) {
 	sort.Strings(kinds)
 
 	fmt.Fprintf(out, "conv_id: %s\n", snap.ConvID)
-	fmt.Fprintf(out, "version: %d\n", snap.Version)
-	fmt.Fprintf(out, "server_time_ms: %d\n", snap.ServerTimeMs)
+	fmt.Fprintf(out, "version: %s\n", formatJSONScalar(snap.Version))
+	fmt.Fprintf(out, "server_time_ms: %s\n", formatJSONScalar(snap.ServerTimeMs))
 	fmt.Fprintf(out, "entities: %d\n", len(snap.Entities))
 	for _, k := range kinds {
 		fmt.Fprintf(out, "  %s: %d\n", k, counts[k])
 	}
+}
+
+func formatJSONScalar(raw json.RawMessage) string {
+	if len(raw) == 0 {
+		return ""
+	}
+	s := strings.TrimSpace(string(raw))
+	return strings.Trim(s, "\"")
 }
