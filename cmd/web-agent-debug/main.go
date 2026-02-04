@@ -37,7 +37,7 @@ func runCommand(cmd string, args []string) error {
 	case "ws":
 		return runWS(args)
 	case "timeline":
-		return fmt.Errorf("command %s not implemented yet", cmd)
+		return runTimeline(args)
 	case "run":
 		return fmt.Errorf("command %s not implemented yet", cmd)
 	default:
