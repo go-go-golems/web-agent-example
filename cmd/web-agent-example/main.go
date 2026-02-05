@@ -56,6 +56,8 @@ func NewCommand() (*Command, error) {
 			parameters.NewParameterDefinition("root", parameters.ParameterTypeString, parameters.WithDefault("/"), parameters.WithHelp("Serve the chat UI under a given URL root (e.g., /chat)")),
 			parameters.NewParameterDefinition("timeline-dsn", parameters.ParameterTypeString, parameters.WithDefault(""), parameters.WithHelp("SQLite DSN for durable timeline snapshots (enables GET /timeline); preferred over timeline-db")),
 			parameters.NewParameterDefinition("timeline-db", parameters.ParameterTypeString, parameters.WithDefault(""), parameters.WithHelp("SQLite DB file path for durable timeline snapshots (enables GET /timeline); DSN is derived with WAL/busy_timeout")),
+			parameters.NewParameterDefinition("turns-dsn", parameters.ParameterTypeString, parameters.WithDefault(""), parameters.WithHelp("SQLite DSN for durable turn snapshots (enables GET /turns); preferred over turns-db")),
+			parameters.NewParameterDefinition("turns-db", parameters.ParameterTypeString, parameters.WithDefault(""), parameters.WithHelp("SQLite DB file path for durable turn snapshots (enables GET /turns); DSN is derived with WAL/busy_timeout")),
 		),
 		cmds.WithLayersList(append(geLayers, redisLayer)...),
 	)
@@ -79,8 +81,8 @@ func (c *Command) RunIntoWriter(ctx context.Context, parsed *layers.ParsedLayers
 	})
 
 	r.AddProfile(&webchat.Profile{
-		Slug:           "default",
-		DefaultPrompt:  "You are a helpful assistant.",
+		Slug:          "default",
+		DefaultPrompt: "You are a helpful assistant.",
 		DefaultMws: []webchat.MiddlewareUse{
 			{Name: "webagent-thinking-mode", Config: thinkingmode.DefaultConfig()},
 			{Name: "webagent-disco-dialogue", Config: discodialogue.DefaultConfig()},

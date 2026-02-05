@@ -62,4 +62,6 @@ The default profile also enables both middlewares, so the UI toggle only needs t
 
 - The frontend build outputs to `cmd/web-agent-example/static/dist`.
 - Timeline snapshots are stored in memory by default. Use `--timeline-dsn` or `--timeline-db` to persist timeline data.
+- Turn snapshots are disabled by default. Use `--turns-dsn` or `--turns-db` to persist turns and query them via `GET /turns`.
+- For immediate inspection of the exact LLM blocks, set `PINOCCHIO_WEBCHAT_TURN_SNAPSHOTS_DIR=/path/to/dir` and restart the server; snapshots are written as YAML.
 - Use `--log-level debug` when diagnosing event flow and websocket traffic.
