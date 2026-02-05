@@ -48,19 +48,19 @@ type DialogueStatePayload struct {
 	Summary    string `json:"summary" yaml:"summary"`
 }
 
-type EventDialogueLineStarted struct {
+type DialogueLineStartedEvent struct {
 	gepevents.EventImpl
 	ItemID string               `json:"item_id"`
 	Data   *DialogueLinePayload `json:"data,omitempty"`
 }
 
-type EventDialogueLineUpdate struct {
+type DialogueLineUpdateEvent struct {
 	gepevents.EventImpl
 	ItemID string               `json:"item_id"`
 	Data   *DialogueLinePayload `json:"data,omitempty"`
 }
 
-type EventDialogueLineCompleted struct {
+type DialogueLineCompletedEvent struct {
 	gepevents.EventImpl
 	ItemID  string               `json:"item_id"`
 	Data    *DialogueLinePayload `json:"data,omitempty"`
@@ -68,19 +68,19 @@ type EventDialogueLineCompleted struct {
 	Error   string               `json:"error,omitempty"`
 }
 
-type EventDialogueCheckStarted struct {
+type DialogueCheckStartedEvent struct {
 	gepevents.EventImpl
 	ItemID string                `json:"item_id"`
 	Data   *DialogueCheckPayload `json:"data,omitempty"`
 }
 
-type EventDialogueCheckUpdate struct {
+type DialogueCheckUpdateEvent struct {
 	gepevents.EventImpl
 	ItemID string                `json:"item_id"`
 	Data   *DialogueCheckPayload `json:"data,omitempty"`
 }
 
-type EventDialogueCheckCompleted struct {
+type DialogueCheckCompletedEvent struct {
 	gepevents.EventImpl
 	ItemID  string                `json:"item_id"`
 	Data    *DialogueCheckPayload `json:"data,omitempty"`
@@ -88,19 +88,19 @@ type EventDialogueCheckCompleted struct {
 	Error   string                `json:"error,omitempty"`
 }
 
-type EventDialogueStateStarted struct {
+type DialogueStateStartedEvent struct {
 	gepevents.EventImpl
 	ItemID string                `json:"item_id"`
 	Data   *DialogueStatePayload `json:"data,omitempty"`
 }
 
-type EventDialogueStateUpdate struct {
+type DialogueStateUpdateEvent struct {
 	gepevents.EventImpl
 	ItemID string                `json:"item_id"`
 	Data   *DialogueStatePayload `json:"data,omitempty"`
 }
 
-type EventDialogueStateCompleted struct {
+type DialogueStateCompletedEvent struct {
 	gepevents.EventImpl
 	ItemID  string                `json:"item_id"`
 	Data    *DialogueStatePayload `json:"data,omitempty"`
@@ -108,68 +108,68 @@ type EventDialogueStateCompleted struct {
 	Error   string                `json:"error,omitempty"`
 }
 
-func NewDialogueLineStarted(metadata gepevents.EventMetadata, itemID string, data *DialogueLinePayload) *EventDialogueLineStarted {
-	return &EventDialogueLineStarted{EventImpl: gepevents.EventImpl{Type_: EventDialogueLineStarted, Metadata_: metadata}, ItemID: itemID, Data: data}
+func NewDialogueLineStarted(metadata gepevents.EventMetadata, itemID string, data *DialogueLinePayload) *DialogueLineStartedEvent {
+	return &DialogueLineStartedEvent{EventImpl: gepevents.EventImpl{Type_: EventDialogueLineStarted, Metadata_: metadata}, ItemID: itemID, Data: data}
 }
 
-func NewDialogueLineUpdate(metadata gepevents.EventMetadata, itemID string, data *DialogueLinePayload) *EventDialogueLineUpdate {
-	return &EventDialogueLineUpdate{EventImpl: gepevents.EventImpl{Type_: EventDialogueLineUpdate, Metadata_: metadata}, ItemID: itemID, Data: data}
+func NewDialogueLineUpdate(metadata gepevents.EventMetadata, itemID string, data *DialogueLinePayload) *DialogueLineUpdateEvent {
+	return &DialogueLineUpdateEvent{EventImpl: gepevents.EventImpl{Type_: EventDialogueLineUpdate, Metadata_: metadata}, ItemID: itemID, Data: data}
 }
 
-func NewDialogueLineCompleted(metadata gepevents.EventMetadata, itemID string, data *DialogueLinePayload, success bool, errStr string) *EventDialogueLineCompleted {
-	return &EventDialogueLineCompleted{EventImpl: gepevents.EventImpl{Type_: EventDialogueLineCompleted, Metadata_: metadata}, ItemID: itemID, Data: data, Success: success, Error: errStr}
+func NewDialogueLineCompleted(metadata gepevents.EventMetadata, itemID string, data *DialogueLinePayload, success bool, errStr string) *DialogueLineCompletedEvent {
+	return &DialogueLineCompletedEvent{EventImpl: gepevents.EventImpl{Type_: EventDialogueLineCompleted, Metadata_: metadata}, ItemID: itemID, Data: data, Success: success, Error: errStr}
 }
 
-func NewDialogueCheckStarted(metadata gepevents.EventMetadata, itemID string, data *DialogueCheckPayload) *EventDialogueCheckStarted {
-	return &EventDialogueCheckStarted{EventImpl: gepevents.EventImpl{Type_: EventDialogueCheckStarted, Metadata_: metadata}, ItemID: itemID, Data: data}
+func NewDialogueCheckStarted(metadata gepevents.EventMetadata, itemID string, data *DialogueCheckPayload) *DialogueCheckStartedEvent {
+	return &DialogueCheckStartedEvent{EventImpl: gepevents.EventImpl{Type_: EventDialogueCheckStarted, Metadata_: metadata}, ItemID: itemID, Data: data}
 }
 
-func NewDialogueCheckUpdate(metadata gepevents.EventMetadata, itemID string, data *DialogueCheckPayload) *EventDialogueCheckUpdate {
-	return &EventDialogueCheckUpdate{EventImpl: gepevents.EventImpl{Type_: EventDialogueCheckUpdate, Metadata_: metadata}, ItemID: itemID, Data: data}
+func NewDialogueCheckUpdate(metadata gepevents.EventMetadata, itemID string, data *DialogueCheckPayload) *DialogueCheckUpdateEvent {
+	return &DialogueCheckUpdateEvent{EventImpl: gepevents.EventImpl{Type_: EventDialogueCheckUpdate, Metadata_: metadata}, ItemID: itemID, Data: data}
 }
 
-func NewDialogueCheckCompleted(metadata gepevents.EventMetadata, itemID string, data *DialogueCheckPayload, success bool, errStr string) *EventDialogueCheckCompleted {
-	return &EventDialogueCheckCompleted{EventImpl: gepevents.EventImpl{Type_: EventDialogueCheckCompleted, Metadata_: metadata}, ItemID: itemID, Data: data, Success: success, Error: errStr}
+func NewDialogueCheckCompleted(metadata gepevents.EventMetadata, itemID string, data *DialogueCheckPayload, success bool, errStr string) *DialogueCheckCompletedEvent {
+	return &DialogueCheckCompletedEvent{EventImpl: gepevents.EventImpl{Type_: EventDialogueCheckCompleted, Metadata_: metadata}, ItemID: itemID, Data: data, Success: success, Error: errStr}
 }
 
-func NewDialogueStateStarted(metadata gepevents.EventMetadata, itemID string, data *DialogueStatePayload) *EventDialogueStateStarted {
-	return &EventDialogueStateStarted{EventImpl: gepevents.EventImpl{Type_: EventDialogueStateStarted, Metadata_: metadata}, ItemID: itemID, Data: data}
+func NewDialogueStateStarted(metadata gepevents.EventMetadata, itemID string, data *DialogueStatePayload) *DialogueStateStartedEvent {
+	return &DialogueStateStartedEvent{EventImpl: gepevents.EventImpl{Type_: EventDialogueStateStarted, Metadata_: metadata}, ItemID: itemID, Data: data}
 }
 
-func NewDialogueStateUpdate(metadata gepevents.EventMetadata, itemID string, data *DialogueStatePayload) *EventDialogueStateUpdate {
-	return &EventDialogueStateUpdate{EventImpl: gepevents.EventImpl{Type_: EventDialogueStateUpdate, Metadata_: metadata}, ItemID: itemID, Data: data}
+func NewDialogueStateUpdate(metadata gepevents.EventMetadata, itemID string, data *DialogueStatePayload) *DialogueStateUpdateEvent {
+	return &DialogueStateUpdateEvent{EventImpl: gepevents.EventImpl{Type_: EventDialogueStateUpdate, Metadata_: metadata}, ItemID: itemID, Data: data}
 }
 
-func NewDialogueStateCompleted(metadata gepevents.EventMetadata, itemID string, data *DialogueStatePayload, success bool, errStr string) *EventDialogueStateCompleted {
-	return &EventDialogueStateCompleted{EventImpl: gepevents.EventImpl{Type_: EventDialogueStateCompleted, Metadata_: metadata}, ItemID: itemID, Data: data, Success: success, Error: errStr}
+func NewDialogueStateCompleted(metadata gepevents.EventMetadata, itemID string, data *DialogueStatePayload, success bool, errStr string) *DialogueStateCompletedEvent {
+	return &DialogueStateCompletedEvent{EventImpl: gepevents.EventImpl{Type_: EventDialogueStateCompleted, Metadata_: metadata}, ItemID: itemID, Data: data, Success: success, Error: errStr}
 }
 
 func init() {
 	_ = gepevents.RegisterEventFactory(string(EventDialogueLineStarted), func() gepevents.Event {
-		return &EventDialogueLineStarted{EventImpl: gepevents.EventImpl{Type_: EventDialogueLineStarted}}
+		return &DialogueLineStartedEvent{EventImpl: gepevents.EventImpl{Type_: EventDialogueLineStarted}}
 	})
 	_ = gepevents.RegisterEventFactory(string(EventDialogueLineUpdate), func() gepevents.Event {
-		return &EventDialogueLineUpdate{EventImpl: gepevents.EventImpl{Type_: EventDialogueLineUpdate}}
+		return &DialogueLineUpdateEvent{EventImpl: gepevents.EventImpl{Type_: EventDialogueLineUpdate}}
 	})
 	_ = gepevents.RegisterEventFactory(string(EventDialogueLineCompleted), func() gepevents.Event {
-		return &EventDialogueLineCompleted{EventImpl: gepevents.EventImpl{Type_: EventDialogueLineCompleted}}
+		return &DialogueLineCompletedEvent{EventImpl: gepevents.EventImpl{Type_: EventDialogueLineCompleted}}
 	})
 	_ = gepevents.RegisterEventFactory(string(EventDialogueCheckStarted), func() gepevents.Event {
-		return &EventDialogueCheckStarted{EventImpl: gepevents.EventImpl{Type_: EventDialogueCheckStarted}}
+		return &DialogueCheckStartedEvent{EventImpl: gepevents.EventImpl{Type_: EventDialogueCheckStarted}}
 	})
 	_ = gepevents.RegisterEventFactory(string(EventDialogueCheckUpdate), func() gepevents.Event {
-		return &EventDialogueCheckUpdate{EventImpl: gepevents.EventImpl{Type_: EventDialogueCheckUpdate}}
+		return &DialogueCheckUpdateEvent{EventImpl: gepevents.EventImpl{Type_: EventDialogueCheckUpdate}}
 	})
 	_ = gepevents.RegisterEventFactory(string(EventDialogueCheckCompleted), func() gepevents.Event {
-		return &EventDialogueCheckCompleted{EventImpl: gepevents.EventImpl{Type_: EventDialogueCheckCompleted}}
+		return &DialogueCheckCompletedEvent{EventImpl: gepevents.EventImpl{Type_: EventDialogueCheckCompleted}}
 	})
 	_ = gepevents.RegisterEventFactory(string(EventDialogueStateStarted), func() gepevents.Event {
-		return &EventDialogueStateStarted{EventImpl: gepevents.EventImpl{Type_: EventDialogueStateStarted}}
+		return &DialogueStateStartedEvent{EventImpl: gepevents.EventImpl{Type_: EventDialogueStateStarted}}
 	})
 	_ = gepevents.RegisterEventFactory(string(EventDialogueStateUpdate), func() gepevents.Event {
-		return &EventDialogueStateUpdate{EventImpl: gepevents.EventImpl{Type_: EventDialogueStateUpdate}}
+		return &DialogueStateUpdateEvent{EventImpl: gepevents.EventImpl{Type_: EventDialogueStateUpdate}}
 	})
 	_ = gepevents.RegisterEventFactory(string(EventDialogueStateCompleted), func() gepevents.Event {
-		return &EventDialogueStateCompleted{EventImpl: gepevents.EventImpl{Type_: EventDialogueStateCompleted}}
+		return &DialogueStateCompletedEvent{EventImpl: gepevents.EventImpl{Type_: EventDialogueStateCompleted}}
 	})
 }

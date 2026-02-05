@@ -14,7 +14,7 @@ func init() {
 }
 
 func registerSemHandlers() {
-	semregistry.RegisterByType[*EventDialogueLineStarted](func(ev *EventDialogueLineStarted) ([][]byte, error) {
+	semregistry.RegisterByType[*DialogueLineStartedEvent](func(ev *DialogueLineStartedEvent) ([][]byte, error) {
 		m := &semMw.DiscoDialogueLineStarted{ItemId: ev.ItemID, Data: linePayloadToProto(ev.Data)}
 		raw, err := protoToRaw(m)
 		if err != nil {
@@ -23,7 +23,7 @@ func registerSemHandlers() {
 		return [][]byte{wrapSem(map[string]any{"type": string(EventDialogueLineStarted), "id": ev.ItemID, "data": raw})}, nil
 	})
 
-	semregistry.RegisterByType[*EventDialogueLineUpdate](func(ev *EventDialogueLineUpdate) ([][]byte, error) {
+	semregistry.RegisterByType[*DialogueLineUpdateEvent](func(ev *DialogueLineUpdateEvent) ([][]byte, error) {
 		m := &semMw.DiscoDialogueLineUpdate{ItemId: ev.ItemID, Data: linePayloadToProto(ev.Data)}
 		raw, err := protoToRaw(m)
 		if err != nil {
@@ -32,7 +32,7 @@ func registerSemHandlers() {
 		return [][]byte{wrapSem(map[string]any{"type": string(EventDialogueLineUpdate), "id": ev.ItemID, "data": raw})}, nil
 	})
 
-	semregistry.RegisterByType[*EventDialogueLineCompleted](func(ev *EventDialogueLineCompleted) ([][]byte, error) {
+	semregistry.RegisterByType[*DialogueLineCompletedEvent](func(ev *DialogueLineCompletedEvent) ([][]byte, error) {
 		m := &semMw.DiscoDialogueLineCompleted{ItemId: ev.ItemID, Data: linePayloadToProto(ev.Data), Success: ev.Success, Error: ev.Error}
 		raw, err := protoToRaw(m)
 		if err != nil {
@@ -41,7 +41,7 @@ func registerSemHandlers() {
 		return [][]byte{wrapSem(map[string]any{"type": string(EventDialogueLineCompleted), "id": ev.ItemID, "data": raw})}, nil
 	})
 
-	semregistry.RegisterByType[*EventDialogueCheckStarted](func(ev *EventDialogueCheckStarted) ([][]byte, error) {
+	semregistry.RegisterByType[*DialogueCheckStartedEvent](func(ev *DialogueCheckStartedEvent) ([][]byte, error) {
 		m := &semMw.DiscoDialogueCheckStarted{ItemId: ev.ItemID, Data: checkPayloadToProto(ev.Data)}
 		raw, err := protoToRaw(m)
 		if err != nil {
@@ -50,7 +50,7 @@ func registerSemHandlers() {
 		return [][]byte{wrapSem(map[string]any{"type": string(EventDialogueCheckStarted), "id": ev.ItemID, "data": raw})}, nil
 	})
 
-	semregistry.RegisterByType[*EventDialogueCheckUpdate](func(ev *EventDialogueCheckUpdate) ([][]byte, error) {
+	semregistry.RegisterByType[*DialogueCheckUpdateEvent](func(ev *DialogueCheckUpdateEvent) ([][]byte, error) {
 		m := &semMw.DiscoDialogueCheckUpdate{ItemId: ev.ItemID, Data: checkPayloadToProto(ev.Data)}
 		raw, err := protoToRaw(m)
 		if err != nil {
@@ -59,7 +59,7 @@ func registerSemHandlers() {
 		return [][]byte{wrapSem(map[string]any{"type": string(EventDialogueCheckUpdate), "id": ev.ItemID, "data": raw})}, nil
 	})
 
-	semregistry.RegisterByType[*EventDialogueCheckCompleted](func(ev *EventDialogueCheckCompleted) ([][]byte, error) {
+	semregistry.RegisterByType[*DialogueCheckCompletedEvent](func(ev *DialogueCheckCompletedEvent) ([][]byte, error) {
 		m := &semMw.DiscoDialogueCheckCompleted{ItemId: ev.ItemID, Data: checkPayloadToProto(ev.Data), Success: ev.Success, Error: ev.Error}
 		raw, err := protoToRaw(m)
 		if err != nil {
@@ -68,7 +68,7 @@ func registerSemHandlers() {
 		return [][]byte{wrapSem(map[string]any{"type": string(EventDialogueCheckCompleted), "id": ev.ItemID, "data": raw})}, nil
 	})
 
-	semregistry.RegisterByType[*EventDialogueStateStarted](func(ev *EventDialogueStateStarted) ([][]byte, error) {
+	semregistry.RegisterByType[*DialogueStateStartedEvent](func(ev *DialogueStateStartedEvent) ([][]byte, error) {
 		m := &semMw.DiscoDialogueStateStarted{ItemId: ev.ItemID, Data: statePayloadToProto(ev.Data)}
 		raw, err := protoToRaw(m)
 		if err != nil {
@@ -77,7 +77,7 @@ func registerSemHandlers() {
 		return [][]byte{wrapSem(map[string]any{"type": string(EventDialogueStateStarted), "id": ev.ItemID, "data": raw})}, nil
 	})
 
-	semregistry.RegisterByType[*EventDialogueStateUpdate](func(ev *EventDialogueStateUpdate) ([][]byte, error) {
+	semregistry.RegisterByType[*DialogueStateUpdateEvent](func(ev *DialogueStateUpdateEvent) ([][]byte, error) {
 		m := &semMw.DiscoDialogueStateUpdate{ItemId: ev.ItemID, Data: statePayloadToProto(ev.Data)}
 		raw, err := protoToRaw(m)
 		if err != nil {
@@ -86,7 +86,7 @@ func registerSemHandlers() {
 		return [][]byte{wrapSem(map[string]any{"type": string(EventDialogueStateUpdate), "id": ev.ItemID, "data": raw})}, nil
 	})
 
-	semregistry.RegisterByType[*EventDialogueStateCompleted](func(ev *EventDialogueStateCompleted) ([][]byte, error) {
+	semregistry.RegisterByType[*DialogueStateCompletedEvent](func(ev *DialogueStateCompletedEvent) ([][]byte, error) {
 		m := &semMw.DiscoDialogueStateCompleted{ItemId: ev.ItemID, Data: statePayloadToProto(ev.Data), Success: ev.Success, Error: ev.Error}
 		raw, err := protoToRaw(m)
 		if err != nil {
