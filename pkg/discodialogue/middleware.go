@@ -10,7 +10,6 @@ import (
 )
 
 const (
-	discoMetadataKey   = "middleware"
 	discoMetadataValue = "disco_dialogue_instructions"
 )
 
@@ -126,7 +125,7 @@ func NewMiddleware(cfg Config) rootmw.Middleware {
 			// Remove prior blocks inserted by this middleware (idempotency).
 			filtered := make([]turns.Block, 0, len(t.Blocks))
 			for _, b := range t.Blocks {
-				if turns.HasBlockMetadata(b, discoMetadataKey, discoMetadataValue) {
+				if v, ok, err := turns.KeyBlockMetaMiddleware.Get(b.Metadata); err == nil && ok && v == discoMetadataValue {
 					continue
 				}
 				filtered = append(filtered, b)
@@ -135,10 +134,10 @@ func NewMiddleware(cfg Config) rootmw.Middleware {
 
 			instructions := buildDiscoDialogueInstructions(cfg)
 			if strings.TrimSpace(instructions) != "" {
-				blk := turns.WithBlockMetadata(
-					turns.NewSystemTextBlock(instructions),
-					map[string]any{discoMetadataKey: discoMetadataValue},
-				)
+				blk := turns.NewSystemTextBlock(instructions)
+				if err := turns.KeyBlockMetaMiddleware.Set(&blk.Metadata, discoMetadataValue); err != nil {
+					return nil, err
+				}
 				t.Blocks = append([]turns.Block{blk}, t.Blocks...)
 			}
 			return next(ctx, t)
