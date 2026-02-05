@@ -36,3 +36,30 @@ body {
 .webagent-thinking-reasoning {
   max-width: 560px;
 }
+
+.disco-dialogue-card {
+  border-left: 4px solid #d97706;
+}
+
+.disco-dialogue-meta {
+  font-family: "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", monospace;
+}
+
+.disco-dialogue-line-text {
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.disco-dialogue-persona {
+  letter-spacing: 0.02em;
+}
+
+.disco-dialogue-progress {
+  height: 6px;
+}
+
+.disco-dialogue-summary {
+  font-size: 0.98rem;
+  line-height: 1.4;
+}

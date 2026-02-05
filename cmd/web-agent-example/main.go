@@ -24,6 +24,7 @@ import (
 	"github.com/go-go-golems/pinocchio/pkg/webchat"
 	"github.com/rs/zerolog/log"
 
+	"github.com/go-go-golems/web-agent-example/pkg/discodialogue"
 	"github.com/go-go-golems/web-agent-example/pkg/thinkingmode"
 )
 
@@ -73,11 +74,17 @@ func (c *Command) RunIntoWriter(ctx context.Context, parsed *layers.ParsedLayers
 	r.RegisterMiddleware("webagent-thinking-mode", func(cfg any) geppettomw.Middleware {
 		return thinkingmode.NewMiddleware(thinkingmode.ConfigFromAny(cfg))
 	})
+	r.RegisterMiddleware("webagent-disco-dialogue", func(cfg any) geppettomw.Middleware {
+		return discodialogue.NewMiddleware(discodialogue.ConfigFromAny(cfg))
+	})
 
 	r.AddProfile(&webchat.Profile{
 		Slug:           "default",
 		DefaultPrompt:  "You are a helpful assistant.",
-		DefaultMws:     []webchat.MiddlewareUse{{Name: "webagent-thinking-mode", Config: thinkingmode.DefaultConfig()}},
+		DefaultMws: []webchat.MiddlewareUse{
+			{Name: "webagent-thinking-mode", Config: thinkingmode.DefaultConfig()},
+			{Name: "webagent-disco-dialogue", Config: discodialogue.DefaultConfig()},
+		},
 		AllowOverrides: true,
 	})
 
