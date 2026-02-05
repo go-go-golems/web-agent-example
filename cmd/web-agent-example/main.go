@@ -62,7 +62,9 @@ func NewCommand() (*Command, error) {
 }
 
 func (c *Command) RunIntoWriter(ctx context.Context, parsed *layers.ParsedLayers, _ io.Writer) error {
-	r, err := webchat.NewRouter(ctx, parsed, staticFS)
+	r, err := webchat.NewRouter(ctx, parsed, staticFS,
+		webchat.WithEngineFromReqBuilder(newNoCookieEngineFromReqBuilder()),
+	)
 	if err != nil {
 		return errors.Wrap(err, "new webchat router")
 	}
