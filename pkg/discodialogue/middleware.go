@@ -138,7 +138,19 @@ func NewMiddleware(cfg Config) rootmw.Middleware {
 				if err := turns.KeyBlockMetaMiddleware.Set(&blk.Metadata, discoMetadataValue); err != nil {
 					return nil, err
 				}
-				t.Blocks = append([]turns.Block{blk}, t.Blocks...)
+				insertAt := -1
+				for i, b := range t.Blocks {
+					if b.Kind == turns.BlockKindSystem {
+						insertAt = i + 1
+						break
+					}
+				}
+				if insertAt == -1 {
+					t.Blocks = append([]turns.Block{blk}, t.Blocks...)
+				} else {
+					// Insert after the base system block so systemprompt middleware can still replace it.
+					t.Blocks = append(t.Blocks[:insertAt], append([]turns.Block{blk}, t.Blocks[insertAt:]...)...)
+				}
 			}
 			return next(ctx, t)
 		}
