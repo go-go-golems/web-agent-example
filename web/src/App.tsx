@@ -10,7 +10,7 @@ export function App() {
   const [discoEnabled, setDiscoEnabled] = useState(true);
 
   const buildOverrides = useCallback(() => {
-    const middlewares = [
+    const middlewares: Array<{ name: string; config: Record<string, unknown> }> = [
       {
         name: 'webagent-thinking-mode',
         config: { mode },
