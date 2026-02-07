@@ -13,12 +13,25 @@ const meta: Meta<typeof BlockCard> = {
 export default meta;
 type Story = StoryObj<typeof BlockCard>;
 
+// Standard metadata helper
+const stdMeta = (blockId: string) => ({
+  'geppetto.block_id@v1': blockId,
+  'geppetto.turn_id@v1': 'turn_01',
+  'geppetto.session_id@v1': 'sess_01234567',
+  'geppetto.created_at@v1': '2026-02-06T14:32:08.000Z',
+});
+
 const systemBlock: ParsedBlock = {
   index: 0,
   kind: 'system',
   role: 'system',
   payload: { text: 'You are a helpful assistant. Be concise and accurate.' },
-  metadata: { 'geppetto.middleware@v1': 'system-prompt-mw' },
+  metadata: {
+    ...stdMeta('blk_sys_001'),
+    'geppetto.middleware@v1': 'system-prompt-mw',
+    'geppetto.source@v1': 'profile.yaml',
+    'geppetto.profile@v1': 'general',
+  },
 };
 
 const userBlock: ParsedBlock = {
@@ -26,7 +39,12 @@ const userBlock: ParsedBlock = {
   kind: 'user',
   role: 'user',
   payload: { text: 'What is the weather in Paris?' },
-  metadata: {},
+  metadata: {
+    ...stdMeta('blk_usr_001'),
+    'webchat.client_id@v1': 'client_abc123',
+    'webchat.input_method@v1': 'keyboard',
+    'webchat.timestamp@v1': 1707229920000,
+  },
 };
 
 const toolCallBlock: ParsedBlock = {
@@ -38,7 +56,12 @@ const toolCallBlock: ParsedBlock = {
     name: 'get_weather',
     args: { location: 'Paris', units: 'celsius' },
   },
-  metadata: {},
+  metadata: {
+    ...stdMeta('blk_tc_001'),
+    'geppetto.inference_id@v1': 'inf_abc123',
+    'geppetto.model@v1': 'claude-3.5-sonnet',
+    'geppetto.tool_config@v1': { timeout_ms: 5000, retries: 2 },
+  },
 };
 
 const toolUseBlock: ParsedBlock = {
@@ -48,7 +71,13 @@ const toolUseBlock: ParsedBlock = {
     id: 'tc_001',
     result: { temperature: 18, condition: 'cloudy', humidity: 65 },
   },
-  metadata: {},
+  metadata: {
+    ...stdMeta('blk_tu_001'),
+    'geppetto.tool_call_id@v1': 'tc_001',
+    'geppetto.tool_name@v1': 'get_weather',
+    'geppetto.execution@v1': { duration_ms: 234, status: 'success', retries: 0 },
+    'geppetto.cache@v1': { hit: false, ttl_s: 300 },
+  },
 };
 
 const llmTextBlock: ParsedBlock = {
@@ -56,14 +85,26 @@ const llmTextBlock: ParsedBlock = {
   kind: 'llm_text',
   role: 'assistant',
   payload: { text: 'The weather in Paris is currently 18°C and cloudy with 65% humidity.' },
-  metadata: {},
+  metadata: {
+    ...stdMeta('blk_llm_001'),
+    'geppetto.inference_id@v1': 'inf_abc123',
+    'geppetto.model@v1': 'claude-3.5-sonnet',
+    'geppetto.usage@v1': { prompt_tokens: 847, completion_tokens: 42, total_tokens: 889 },
+    'geppetto.latency_ms@v1': 1823,
+    'geppetto.stop_reason@v1': 'end_turn',
+  },
 };
 
 const reasoningBlock: ParsedBlock = {
   index: 5,
   kind: 'reasoning',
   payload: { encrypted_content: '<encrypted>' },
-  metadata: {},
+  metadata: {
+    ...stdMeta('blk_reason_001'),
+    'geppetto.inference_id@v1': 'inf_abc123',
+    'geppetto.model@v1': 'claude-3.5-sonnet',
+    'geppetto.thinking_budget@v1': { max_tokens: 10000, used_tokens: 4521 },
+  },
 };
 
 export const System: Story = {
