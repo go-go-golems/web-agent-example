@@ -25,10 +25,19 @@ export interface CreateDebugHandlersOptions {
   data: DebugHandlerData;
   nowMs?: () => number;
   nowIso?: () => string;
+  delayMs?: {
+    conversations?: number;
+  };
 }
 
 export function createDebugHandlers(options: CreateDebugHandlersOptions) {
-  const { data, nowMs = () => Date.now(), nowIso = () => new Date().toISOString() } = options;
+  const {
+    data,
+    nowMs = () => Date.now(),
+    nowIso = () => new Date().toISOString(),
+    delayMs,
+  } = options;
+  const conversationsDelayMs = Math.max(0, delayMs?.conversations ?? 0);
   const {
     conversations,
     conversationDetail,
@@ -41,7 +50,10 @@ export function createDebugHandlers(options: CreateDebugHandlersOptions) {
   } = data;
 
   return [
-    http.get('/debug/conversations', () => {
+    http.get('/debug/conversations', async () => {
+      if (conversationsDelayMs > 0) {
+        await new Promise((resolve) => setTimeout(resolve, conversationsDelayMs));
+      }
       return HttpResponse.json({ conversations });
     }),
 

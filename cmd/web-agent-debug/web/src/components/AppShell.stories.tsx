@@ -1,8 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { http, HttpResponse } from 'msw';
 import { AppShell } from './AppShell';
-import { mockConversations, mockTurns, mockEvents, mockTimelineEntities } from '../mocks/data';
 import type { Anomaly } from './AnomalyPanel';
+import {
+  createDefaultDebugHandlers,
+  defaultHandlers,
+} from '../mocks/msw/defaultHandlers';
 
 const meta: Meta<typeof AppShell> = {
   title: 'Debug UI/AppShell',
@@ -10,23 +12,7 @@ const meta: Meta<typeof AppShell> = {
   parameters: {
     layout: 'fullscreen',
     msw: {
-      handlers: [
-        http.get('/debug/conversations', () => {
-          return HttpResponse.json({ conversations: mockConversations });
-        }),
-        http.get('/debug/conversation/:id', () => {
-          return HttpResponse.json(mockConversations[0]);
-        }),
-        http.get('/debug/turns', () => {
-          return HttpResponse.json(mockTurns);
-        }),
-        http.get('/debug/events/:id', () => {
-          return HttpResponse.json({ events: mockEvents, total: mockEvents.length, buffer_capacity: 1000 });
-        }),
-        http.get('/debug/timeline', () => {
-          return HttpResponse.json({ entities: mockTimelineEntities, version: Date.now() });
-        }),
-      ],
+      handlers: defaultHandlers,
     },
   },
 };
@@ -64,11 +50,7 @@ export const WithAnomalies: Story = {
 export const EmptyState: Story = {
   parameters: {
     msw: {
-      handlers: [
-        http.get('/debug/conversations', () => {
-          return HttpResponse.json({ conversations: [] });
-        }),
-      ],
+      handlers: createDefaultDebugHandlers({ conversations: [] }),
     },
   },
 };
@@ -76,12 +58,7 @@ export const EmptyState: Story = {
 export const Loading: Story = {
   parameters: {
     msw: {
-      handlers: [
-        http.get('/debug/conversations', async () => {
-          await new Promise(resolve => setTimeout(resolve, 10000));
-          return HttpResponse.json({ conversations: [] });
-        }),
-      ],
+      handlers: createDefaultDebugHandlers({ conversations: [] }, { delayMs: { conversations: 10_000 } }),
     },
   },
 };

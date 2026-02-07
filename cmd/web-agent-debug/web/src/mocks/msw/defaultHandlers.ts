@@ -6,7 +6,11 @@ import {
 import { mockEvents, mockMwTrace } from '../fixtures/events';
 import { mockTimelineEntities } from '../fixtures/timeline';
 import { mockTurnDetail, mockTurns } from '../fixtures/turns';
-import { createDebugHandlers, type DebugHandlerData } from './createDebugHandlers';
+import {
+  createDebugHandlers,
+  type CreateDebugHandlersOptions,
+  type DebugHandlerData,
+} from './createDebugHandlers';
 
 export const defaultDebugHandlerData: DebugHandlerData = {
   conversations: mockConversations,
@@ -19,8 +23,14 @@ export const defaultDebugHandlerData: DebugHandlerData = {
   mwTrace: mockMwTrace,
 };
 
-export function createDefaultDebugHandlers(dataOverrides: Partial<DebugHandlerData> = {}) {
+type DefaultDebugHandlerOptions = Omit<CreateDebugHandlersOptions, 'data'>;
+
+export function createDefaultDebugHandlers(
+  dataOverrides: Partial<DebugHandlerData> = {},
+  options: DefaultDebugHandlerOptions = {}
+) {
   return createDebugHandlers({
+    ...options,
     data: {
       ...defaultDebugHandlerData,
       ...dataOverrides,
