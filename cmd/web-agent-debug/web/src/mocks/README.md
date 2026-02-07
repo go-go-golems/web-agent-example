@@ -6,7 +6,6 @@ This directory defines a layered mock-data system for Storybook and MSW:
 - `factories/`: deterministic builders for fixture-derived variations.
 - `scenarios/`: reusable story contexts composed from factories.
 - `msw/`: reusable endpoint handler builders and default handler bundles.
-- `data.ts`: legacy compatibility shim for imports not migrated yet.
 
 ## Layer Contracts
 
@@ -33,12 +32,6 @@ This directory defines a layered mock-data system for Storybook and MSW:
 - `createDebugHandlers.ts`: generic handler builder for debug endpoints.
 - `defaultHandlers.ts`: fixture-backed defaults plus optional override hooks.
 - Story/runtime handler wiring should import these modules, not redefine routes inline.
-
-### `data.ts` (legacy)
-
-- Compatibility re-export layer only.
-- New code should import from `fixtures/`, `factories/`, `scenarios/`, or `msw/`.
-- Remove after all remaining legacy consumers are migrated.
 
 ## Story Authoring Rules
 
