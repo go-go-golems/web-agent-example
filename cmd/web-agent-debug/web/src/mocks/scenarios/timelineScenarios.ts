@@ -49,6 +49,22 @@ export const timelineScenarios: Record<string, TimelineScenario> = {
       isLive: true,
     },
   },
+  turnsOnly: {
+    name: 'turnsOnly',
+    args: {
+      turns: makeTurnSnapshots(2),
+      events: [],
+      entities: [],
+    },
+  },
+  eventsOnly: {
+    name: 'eventsOnly',
+    args: {
+      turns: [],
+      events: makeEvents(6),
+      entities: [],
+    },
+  },
   empty: {
     name: 'empty',
     args: {
