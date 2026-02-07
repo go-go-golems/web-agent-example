@@ -61,52 +61,6 @@ export function SnapshotDiff({ phaseA, phaseB, turnA, turnB, onBlockSelect }: Sn
           <MetadataDiff changes={metaDiff} />
         </div>
       )}
-
-      <style>{`
-        .snapshot-diff {
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-        }
-
-        .diff-body {
-          display: flex;
-          gap: 8px;
-        }
-
-        .diff-column {
-          flex: 1;
-        }
-
-        .diff-column-header {
-          font-size: 12px;
-          font-weight: 600;
-          color: var(--text-secondary);
-          padding: 8px;
-          background: var(--bg-secondary);
-          border-radius: 4px;
-          text-align: center;
-          text-transform: uppercase;
-        }
-
-        .diff-rows {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-        }
-
-        .metadata-diff-section {
-          margin-top: 16px;
-          padding-top: 16px;
-          border-top: 1px solid var(--border-color);
-        }
-
-        .metadata-diff-section h4 {
-          margin-bottom: 8px;
-          font-size: 13px;
-          color: var(--text-secondary);
-        }
-      `}</style>
     </div>
   );
 }
@@ -122,40 +76,6 @@ function DiffHeader({ phaseA, phaseB }: DiffHeaderProps) {
       <span className="phase-label phase-a">{formatPhaseLabel(phaseA)}</span>
       <span className="diff-arrow">→</span>
       <span className="phase-label phase-b">{formatPhaseLabel(phaseB)}</span>
-
-      <style>{`
-        .diff-header {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 12px;
-          padding: 12px;
-          background: var(--bg-secondary);
-          border-radius: 6px;
-        }
-
-        .phase-label {
-          font-size: 14px;
-          font-weight: 600;
-          padding: 4px 12px;
-          border-radius: 4px;
-        }
-
-        .phase-a {
-          background: rgba(245, 158, 11, 0.2);
-          color: var(--accent-yellow);
-        }
-
-        .phase-b {
-          background: rgba(16, 185, 129, 0.2);
-          color: var(--accent-green);
-        }
-
-        .diff-arrow {
-          font-size: 18px;
-          color: var(--text-muted);
-        }
-      `}</style>
     </div>
   );
 }
@@ -190,46 +110,6 @@ function DiffSummaryBar({ summary }: DiffSummaryBarProps) {
       {summary.same > 0 && (
         <span className="summary-chip same">{summary.same} unchanged</span>
       )}
-
-      <style>{`
-        .diff-summary-bar {
-          display: flex;
-          gap: 8px;
-          flex-wrap: wrap;
-        }
-
-        .summary-chip {
-          font-size: 12px;
-          padding: 4px 10px;
-          border-radius: 12px;
-          font-weight: 500;
-        }
-
-        .summary-chip.added {
-          background: rgba(16, 185, 129, 0.2);
-          color: var(--accent-green);
-        }
-
-        .summary-chip.removed {
-          background: rgba(239, 68, 68, 0.2);
-          color: var(--accent-red);
-        }
-
-        .summary-chip.changed {
-          background: rgba(245, 158, 11, 0.2);
-          color: var(--accent-yellow);
-        }
-
-        .summary-chip.reordered {
-          background: rgba(139, 92, 246, 0.2);
-          color: var(--accent-purple);
-        }
-
-        .summary-chip.same {
-          background: var(--bg-secondary);
-          color: var(--text-muted);
-        }
-      `}</style>
     </div>
   );
 }
@@ -273,69 +153,6 @@ function DiffBlockRow({ diff, onSelectA, onSelectB }: DiffBlockRowProps) {
           <div className="empty-cell" />
         )}
       </div>
-
-      <style>{`
-        .diff-block-row {
-          display: flex;
-          gap: 8px;
-          align-items: stretch;
-        }
-
-        .diff-cell {
-          flex: 1;
-          cursor: pointer;
-        }
-
-        .diff-cell:hover {
-          opacity: 0.8;
-        }
-
-        .empty-cell {
-          height: 60px;
-          background: var(--bg-secondary);
-          border: 1px dashed var(--border-color);
-          border-radius: 4px;
-        }
-
-        .diff-status {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          width: 80px;
-          gap: 4px;
-        }
-
-        .status-badge {
-          font-size: 16px;
-          width: 28px;
-          height: 28px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 50%;
-        }
-
-        .status-badge.status-same { background: var(--bg-secondary); }
-        .status-badge.status-added { background: rgba(16, 185, 129, 0.2); }
-        .status-badge.status-removed { background: rgba(239, 68, 68, 0.2); }
-        .status-badge.status-changed { background: rgba(245, 158, 11, 0.2); }
-        .status-badge.status-reordered { background: rgba(139, 92, 246, 0.2); }
-
-        .change-list {
-          display: flex;
-          flex-direction: column;
-          gap: 2px;
-        }
-
-        .change-chip {
-          font-size: 9px;
-          padding: 1px 4px;
-          background: var(--bg-tertiary);
-          border-radius: 2px;
-          color: var(--text-muted);
-        }
-      `}</style>
     </div>
   );
 }
@@ -364,58 +181,6 @@ function BlockPreview({ block, dimmed, highlighted }: BlockPreviewProps) {
         {name && <span className="tool-name">{name}</span>}
         {!text && !name && <span className="no-content">—</span>}
       </div>
-
-      <style>{`
-        .block-preview {
-          padding: 8px;
-          background: var(--bg-card);
-          border: 1px solid var(--border-color);
-          border-radius: 4px;
-          border-left-width: 3px;
-        }
-
-        .block-preview.dimmed {
-          opacity: 0.5;
-        }
-
-        .block-preview.highlighted {
-          border-color: var(--accent-green);
-          background: rgba(16, 185, 129, 0.05);
-        }
-
-        .block-preview-header {
-          display: flex;
-          gap: 8px;
-          margin-bottom: 4px;
-          font-size: 11px;
-        }
-
-        .block-index {
-          color: var(--text-muted);
-        }
-
-        .block-kind {
-          font-weight: 600;
-          color: var(--text-secondary);
-        }
-
-        .block-preview-content {
-          font-size: 12px;
-          color: var(--text-primary);
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-
-        .tool-name {
-          color: var(--accent-yellow);
-          font-weight: 500;
-        }
-
-        .no-content {
-          color: var(--text-muted);
-        }
-      `}</style>
     </div>
   );
 }
@@ -440,50 +205,6 @@ function MetadataDiff({ changes }: MetadataDiffProps) {
           <span className="meta-type">{change.type}</span>
         </div>
       ))}
-
-      <style>{`
-        .metadata-diff {
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-        }
-
-        .meta-change {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          padding: 6px 8px;
-          background: var(--bg-secondary);
-          border-radius: 4px;
-          font-size: 12px;
-        }
-
-        .meta-key {
-          font-family: monospace;
-          color: var(--accent-cyan);
-        }
-
-        .meta-type {
-          font-size: 10px;
-          padding: 1px 6px;
-          border-radius: 3px;
-        }
-
-        .meta-added .meta-type {
-          background: rgba(16, 185, 129, 0.2);
-          color: var(--accent-green);
-        }
-
-        .meta-removed .meta-type {
-          background: rgba(239, 68, 68, 0.2);
-          color: var(--accent-red);
-        }
-
-        .meta-changed .meta-type {
-          background: rgba(245, 158, 11, 0.2);
-          color: var(--accent-yellow);
-        }
-      `}</style>
     </div>
   );
 }

@@ -78,21 +78,6 @@ export function EventInspector({
       {trustChecks && trustChecks.length > 0 && (
         <TrustSignals checks={trustChecks} />
       )}
-
-      <style>{`
-        .event-inspector {
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-        }
-
-        .event-content {
-          background: var(--bg-card);
-          border: 1px solid var(--border-color);
-          border-radius: 6px;
-          padding: 16px;
-        }
-      `}</style>
     </div>
   );
 }
@@ -121,46 +106,6 @@ function ViewModeTabs({ activeMode, onModeChange }: ViewModeTabsProps) {
           <span className="tab-label">{label}</span>
         </button>
       ))}
-
-      <style>{`
-        .view-mode-tabs {
-          display: flex;
-          gap: 4px;
-          background: var(--bg-secondary);
-          padding: 4px;
-          border-radius: 6px;
-        }
-
-        .view-mode-tab {
-          flex: 1;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 6px;
-          padding: 8px 16px;
-          border: none;
-          background: transparent;
-          color: var(--text-secondary);
-          font-size: 13px;
-          cursor: pointer;
-          border-radius: 4px;
-          transition: all 0.15s;
-        }
-
-        .view-mode-tab:hover {
-          background: var(--bg-hover);
-          color: var(--text-primary);
-        }
-
-        .view-mode-tab.active {
-          background: var(--accent-blue);
-          color: white;
-        }
-
-        .tab-icon {
-          font-size: 14px;
-        }
-      `}</style>
     </div>
   );
 }
@@ -201,63 +146,6 @@ function SemanticView({ event }: SemanticViewProps) {
       <div className="semantic-content">
         {renderSemanticContent(type, data)}
       </div>
-
-      <style>{`
-        .semantic-view {
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-        }
-
-        .semantic-header {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-        }
-
-        .event-icon {
-          font-size: 28px;
-        }
-
-        .event-type {
-          font-size: 18px;
-          font-weight: 600;
-        }
-
-        .semantic-meta {
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-          padding: 12px;
-          background: var(--bg-secondary);
-          border-radius: 4px;
-        }
-
-        .meta-row {
-          display: flex;
-          gap: 8px;
-          font-size: 13px;
-        }
-
-        .meta-label {
-          color: var(--text-muted);
-          min-width: 80px;
-        }
-
-        .meta-value {
-          color: var(--text-primary);
-        }
-
-        .meta-value.mono {
-          font-family: monospace;
-        }
-
-        .semantic-content {
-          padding: 12px;
-          background: var(--bg-secondary);
-          border-radius: 4px;
-        }
-      `}</style>
     </div>
   );
 }
@@ -330,23 +218,6 @@ function SemEnvelopeView({ event }: SemEnvelopeViewProps) {
       <pre className="json-view">
         {JSON.stringify(event, null, 2)}
       </pre>
-
-      <style>{`
-        .sem-envelope-view h4 {
-          margin-bottom: 12px;
-          font-size: 13px;
-          color: var(--text-secondary);
-        }
-
-        .json-view {
-          font-size: 12px;
-          line-height: 1.5;
-          overflow-x: auto;
-          padding: 12px;
-          background: var(--bg-secondary);
-          border-radius: 4px;
-        }
-      `}</style>
     </div>
   );
 }
@@ -367,24 +238,6 @@ function RawWireView({ event }: RawWireViewProps) {
           ? JSON.stringify(rawData, null, 2)
           : '// Raw wire data not available for this event\n// This would show the original provider response format'}
       </pre>
-
-      <style>{`
-        .raw-wire-view h4 {
-          margin-bottom: 12px;
-          font-size: 13px;
-          color: var(--text-secondary);
-        }
-
-        .json-view {
-          font-size: 12px;
-          line-height: 1.5;
-          overflow-x: auto;
-          padding: 12px;
-          background: var(--bg-secondary);
-          border-radius: 4px;
-          color: var(--text-muted);
-        }
-      `}</style>
     </div>
   );
 }
@@ -436,59 +289,6 @@ function CorrelatedNodesPanel({ nodes, onBlockClick, onEventClick, onEntityClick
           </div>
         )}
       </div>
-
-      <style>{`
-        .correlated-nodes-panel {
-          padding: 12px;
-          background: var(--bg-secondary);
-          border-radius: 6px;
-        }
-
-        .correlated-nodes-panel h4 {
-          margin-bottom: 12px;
-          font-size: 13px;
-          color: var(--text-secondary);
-        }
-
-        .nodes-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-          gap: 8px;
-        }
-
-        .node-link {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 4px;
-          padding: 12px;
-          background: var(--bg-card);
-          border: 1px solid var(--border-color);
-          border-radius: 6px;
-          cursor: pointer;
-          transition: all 0.15s;
-        }
-
-        .node-link:hover {
-          background: var(--bg-hover);
-          border-color: var(--accent-blue);
-        }
-
-        .node-icon {
-          font-size: 20px;
-        }
-
-        .node-label {
-          font-size: 11px;
-          color: var(--text-muted);
-        }
-
-        .node-id {
-          font-size: 12px;
-          font-weight: 500;
-          color: var(--text-primary);
-        }
-      `}</style>
     </div>
   );
 }
@@ -519,76 +319,6 @@ function TrustSignals({ checks }: TrustSignalsProps) {
           </div>
         ))}
       </div>
-
-      <style>{`
-        .trust-signals {
-          padding: 12px;
-          background: var(--bg-secondary);
-          border-radius: 6px;
-        }
-
-        .trust-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-bottom: 12px;
-        }
-
-        .trust-header h4 {
-          font-size: 13px;
-          color: var(--text-secondary);
-        }
-
-        .trust-score {
-          font-size: 12px;
-          padding: 2px 8px;
-          border-radius: 4px;
-        }
-
-        .trust-score.all-pass {
-          background: rgba(16, 185, 129, 0.2);
-          color: var(--accent-green);
-        }
-
-        .trust-score.has-fail {
-          background: rgba(239, 68, 68, 0.2);
-          color: var(--accent-red);
-        }
-
-        .trust-checks {
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-        }
-
-        .trust-check {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          padding: 6px 8px;
-          background: var(--bg-card);
-          border-radius: 4px;
-          font-size: 12px;
-        }
-
-        .trust-check.passed .check-icon {
-          color: var(--accent-green);
-        }
-
-        .trust-check.failed .check-icon {
-          color: var(--accent-red);
-        }
-
-        .check-name {
-          color: var(--text-primary);
-        }
-
-        .check-message {
-          color: var(--text-muted);
-          font-size: 11px;
-          margin-left: auto;
-        }
-      `}</style>
     </div>
   );
 }
