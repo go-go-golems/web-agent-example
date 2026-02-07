@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { http, HttpResponse } from 'msw';
 import { SessionList } from './SessionList';
 import { mockConversations } from '../mocks/data';
+import { createDefaultDebugHandlers } from '../mocks/msw/defaultHandlers';
 
 const meta: Meta<typeof SessionList> = {
   title: 'Debug UI/SessionList',
@@ -66,11 +66,7 @@ export const ManyConversations: Story = {
 export const WithMSW: Story = {
   parameters: {
     msw: {
-      handlers: [
-        http.get('/debug/conversations', () => {
-          return HttpResponse.json({ conversations: mockConversations });
-        }),
-      ],
+      handlers: createDefaultDebugHandlers(),
     },
   },
 };
