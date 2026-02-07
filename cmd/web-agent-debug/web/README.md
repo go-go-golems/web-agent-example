@@ -44,6 +44,23 @@ Styling follows a hybrid contract: namespaced classes as the primary API, with o
 - Override hook:
   - Use `data-part` only where external composition/theming needs a semantic hook beyond class selectors.
 
+## Style Layer Contract and Token Policy
+
+- Style entrypoint:
+  - `src/index.css` is an import orchestrator for all style layers.
+- Layer order:
+  - `src/styles/tokens.css` (design tokens)
+  - `src/styles/reset.css` (global reset)
+  - `src/styles/primitives.css` (buttons/cards/badges/inputs)
+  - `src/styles/layout.css` (app shell/page/lane layout)
+  - `src/styles/components/*.css` (component and route styles)
+- Token requirements:
+  - Add reusable color/alpha/shadow/spacing values in `tokens.css` first.
+  - Reference tokens in component/primitives CSS; avoid repeated hard-coded `rgba(...)` and hex literals.
+- Runtime style rule:
+  - Runtime TSX files must not include inline `<style>{...}</style>` blocks.
+  - Add styles in the corresponding `src/styles/components/*.css` file instead.
+
 ## Component Roadmap
 
 See PI-013 tasks.md for full breakdown:
