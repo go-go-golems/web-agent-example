@@ -18,3 +18,10 @@ export {
   makeAppShellAnomaly,
   makeAppShellAnomalies,
 } from './anomalyFactory';
+export {
+  makeDeterministicId,
+  makeDeterministicIsoTime,
+  makeDeterministicSeq,
+  makeDeterministicTimeMs,
+  shouldApplyDeterministicOverrides,
+} from './deterministic';
