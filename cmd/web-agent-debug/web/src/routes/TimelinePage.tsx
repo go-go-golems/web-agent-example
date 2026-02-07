@@ -23,7 +23,7 @@ export function TimelinePage() {
 
   if (!selectedConvId) {
     return (
-      <div className="empty-state">
+      <div className="timeline-empty-state">
         <h2>📊 Timeline View</h2>
         <p>Select a conversation to view its timeline.</p>
       </div>
@@ -34,7 +34,7 @@ export function TimelinePage() {
 
   if (isLoading) {
     return (
-      <div className="loading-state">
+      <div className="timeline-loading-state">
         <p>Loading timeline...</p>
       </div>
     );
@@ -42,9 +42,9 @@ export function TimelinePage() {
 
   return (
     <div className="timeline-page">
-      <div className="page-header">
+      <div className="timeline-page-header">
         <h2>📊 Timeline</h2>
-        <div className="header-meta">
+        <div className="timeline-header-meta">
           <span>{turns?.length ?? 0} turns</span>
           <span>{eventsData?.events?.length ?? 0} events</span>
           <span>{timeline?.entities?.length ?? 0} entities</span>
@@ -57,44 +57,6 @@ export function TimelinePage() {
         entities={timeline?.entities ?? []}
         isLive={false}
       />
-
-      <style>{`
-        .timeline-page {
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-        }
-
-        .empty-state, .loading-state {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          height: 100%;
-          text-align: center;
-          color: var(--text-muted);
-        }
-
-        .page-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding-bottom: 16px;
-          border-bottom: 1px solid var(--border-color);
-        }
-
-        .page-header h2 {
-          margin: 0;
-          font-size: 18px;
-        }
-
-        .header-meta {
-          display: flex;
-          gap: 16px;
-          font-size: 13px;
-          color: var(--text-secondary);
-        }
-      `}</style>
     </div>
   );
 }
