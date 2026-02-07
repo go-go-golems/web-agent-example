@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { AppShell } from './AppShell';
-import type { Anomaly } from './AnomalyPanel';
 import {
   createDefaultDebugHandlers,
   defaultHandlers,
 } from '../mocks/msw/defaultHandlers';
+import { makeAnomalies } from '../mocks/factories';
 
 const meta: Meta<typeof AppShell> = {
   title: 'Debug UI/AppShell',
@@ -20,30 +20,13 @@ const meta: Meta<typeof AppShell> = {
 export default meta;
 type Story = StoryObj<typeof AppShell>;
 
-const mockAnomalies: Anomaly[] = [
-  {
-    id: 'anom_001',
-    type: 'orphan_event',
-    severity: 'error',
-    message: 'Event has no matching turn',
-    timestamp: new Date().toISOString(),
-  },
-  {
-    id: 'anom_002',
-    type: 'timing_outlier',
-    severity: 'warning',
-    message: 'Slow inference detected',
-    timestamp: new Date().toISOString(),
-  },
-];
-
 export const Default: Story = {
   args: {},
 };
 
 export const WithAnomalies: Story = {
   args: {
-    anomalies: mockAnomalies,
+    anomalies: makeAnomalies(2),
   },
 };
 
