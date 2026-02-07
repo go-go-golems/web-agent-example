@@ -24,6 +24,18 @@ npm run dev
 
 3. Open the UI at `http://localhost:5174`.
 
+## web-agent-debug UI Harness
+
+`cmd/web-agent-debug` can now package and serve its own debug frontend, similar to `pinocchio/cmd/web-chat`:
+
+```bash
+go generate ./cmd/web-agent-debug
+go run ./cmd/web-agent-debug serve --addr :8090 --backend http://localhost:8080
+```
+
+- `--addr` is where the debug UI is served.
+- `--backend` is proxied for `/debug`, `/ws`, `/chat`, `/timeline`, `/turns`, `/hydrate`, and `/api`.
+
 ## How It Works
 
 - The backend registers middleware hooks and exposes `POST /chat`, `GET /hydrate`, `GET /timeline`, and `GET /ws` for streaming.

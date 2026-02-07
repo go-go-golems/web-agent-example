@@ -10,6 +10,18 @@ npx msw init public --save
 npm run storybook
 ```
 
+## Build + Serve From Go
+
+This frontend is packaged by `web-agent-debug` via `go generate`, mirroring the `pinocchio/cmd/web-chat` flow.
+
+```bash
+go generate ./cmd/web-agent-debug
+go run ./cmd/web-agent-debug serve --addr :8090 --backend http://localhost:8080
+```
+
+- Vite build output: `cmd/web-agent-debug/static/dist`
+- Embedded fallback page: `cmd/web-agent-debug/static/index.html`
+
 ## Architecture
 
 - **Storybook 8** for component development
