@@ -29,22 +29,6 @@ export function StateTrackLane({ turns, selectedTurnId, onTurnSelect }: StateTra
           onClick={() => onTurnSelect?.(turn)}
         />
       ))}
-
-      <style>{`
-        .state-track-lane {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
-        }
-
-        .empty-lane {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 24px;
-          color: var(--text-muted);
-        }
-      `}</style>
     </div>
   );
 }
@@ -96,95 +80,6 @@ function TurnCard({ turn, selected, onClick }: TurnCardProps) {
       <div className="turn-card-footer">
         <span className="block-count">{blockCount} blocks</span>
       </div>
-
-      <style>{`
-        .turn-card {
-          background: var(--bg-card);
-          border: 1px solid var(--border-color);
-          border-radius: 6px;
-          padding: 10px;
-          cursor: pointer;
-          transition: all 0.15s;
-        }
-
-        .turn-card:hover {
-          background: var(--bg-hover);
-          border-color: var(--border-light);
-        }
-
-        .turn-card.selected {
-          border-color: var(--accent-purple);
-          background: rgba(139, 92, 246, 0.1);
-        }
-
-        .turn-card-header {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-bottom: 6px;
-        }
-
-        .phase-badge {
-          font-size: 10px;
-          font-weight: 600;
-          text-transform: uppercase;
-          padding: 2px 6px;
-          border-radius: 3px;
-        }
-
-        .phase-pre_inference { background: rgba(245, 158, 11, 0.2); color: var(--accent-yellow); }
-        .phase-post_inference { background: rgba(59, 130, 246, 0.2); color: var(--accent-blue); }
-        .phase-post_tools { background: rgba(6, 182, 212, 0.2); color: var(--accent-cyan); }
-        .phase-final { background: rgba(16, 185, 129, 0.2); color: var(--accent-green); }
-
-        .turn-time {
-          font-size: 10px;
-          color: var(--text-muted);
-        }
-
-        .turn-card-id {
-          display: flex;
-          gap: 8px;
-          font-size: 11px;
-          font-family: monospace;
-          color: var(--text-secondary);
-          margin-bottom: 8px;
-        }
-
-        .turn-id {
-          color: var(--accent-purple);
-        }
-
-        .session-id {
-          color: var(--text-muted);
-        }
-
-        .turn-card-blocks {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 4px;
-          margin-bottom: 6px;
-        }
-
-        .block-chip {
-          font-size: 10px;
-          padding: 2px 6px;
-          border-radius: 3px;
-          background: var(--bg-secondary);
-        }
-
-        .block-kind-system { border-left: 2px solid var(--block-system); }
-        .block-kind-user { border-left: 2px solid var(--block-user); }
-        .block-kind-llm_text { border-left: 2px solid var(--block-assistant); }
-        .block-kind-tool_call { border-left: 2px solid var(--block-tool-call); }
-        .block-kind-tool_use { border-left: 2px solid var(--block-tool-use); }
-        .block-kind-reasoning { border-left: 2px solid var(--block-reasoning); }
-
-        .turn-card-footer {
-          font-size: 10px;
-          color: var(--text-muted);
-        }
-      `}</style>
     </div>
   );
 }
