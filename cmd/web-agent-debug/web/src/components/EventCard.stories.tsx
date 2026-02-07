@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { EventCard } from './EventCard';
-import { mockEvents } from '../mocks/data';
+import { mockEvents } from '../mocks/fixtures/events';
 
 const meta: Meta<typeof EventCard> = {
   title: 'Debug UI/EventCard',

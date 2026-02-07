@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { ConversationCard } from './ConversationCard';
-import { mockConversations } from '../mocks/data';
+import { mockConversations } from '../mocks/fixtures/conversations';
 
 const meta: Meta<typeof ConversationCard> = {
   title: 'Debug UI/ConversationCard',

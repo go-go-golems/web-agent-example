@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { MiddlewareChainView } from './MiddlewareChainView';
-import { mockMwTrace } from '../mocks/data';
+import { mockMwTrace } from '../mocks/fixtures/events';
 
 const meta: Meta<typeof MiddlewareChainView> = {
   title: 'Debug UI/MiddlewareChainView',

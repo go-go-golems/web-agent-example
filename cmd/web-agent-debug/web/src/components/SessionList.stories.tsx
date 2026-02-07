@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { SessionList } from './SessionList';
-import { mockConversations } from '../mocks/data';
+import { makeConversations } from '../mocks/factories';
+import { mockConversations } from '../mocks/fixtures/conversations';
 import { createDefaultDebugHandlers } from '../mocks/msw/defaultHandlers';
 
 const meta: Meta<typeof SessionList> = {
@@ -50,14 +51,7 @@ export const SingleConversation: Story = {
 
 export const ManyConversations: Story = {
   args: {
-    conversations: [
-      ...mockConversations,
-      { ...mockConversations[0], id: 'conv_extra1', session_id: 'sess_e1' },
-      { ...mockConversations[1], id: 'conv_extra2', session_id: 'sess_e2' },
-      { ...mockConversations[2], id: 'conv_extra3', session_id: 'sess_e3' },
-      { ...mockConversations[0], id: 'conv_extra4', session_id: 'sess_e4' },
-      { ...mockConversations[1], id: 'conv_extra5', session_id: 'sess_e5' },
-    ],
+    conversations: makeConversations(8),
     isLoading: false,
   },
 };

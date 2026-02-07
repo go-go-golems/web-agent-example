@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { TimelineEntityCard } from './TimelineEntityCard';
-import { mockTimelineEntities } from '../mocks/data';
+import { mockTimelineEntities } from '../mocks/fixtures/timeline';
 
 const meta: Meta<typeof TimelineEntityCard> = {
   title: 'Debug UI/TimelineEntityCard',

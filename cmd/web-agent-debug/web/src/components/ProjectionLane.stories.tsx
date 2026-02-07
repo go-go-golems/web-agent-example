@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { ProjectionLane } from './ProjectionLane';
-import { mockTimelineEntities } from '../mocks/data';
+import { mockTimelineEntities } from '../mocks/fixtures/timeline';
 
 const meta: Meta<typeof ProjectionLane> = {
   title: 'Debug UI/ProjectionLane',

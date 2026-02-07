@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { StateTrackLane } from './StateTrackLane';
-import { mockTurns } from '../mocks/data';
+import { mockTurns } from '../mocks/fixtures/turns';
 
 const meta: Meta<typeof StateTrackLane> = {
   title: 'Debug UI/StateTrackLane',

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { TurnInspector } from './TurnInspector';
-import { mockTurnDetail } from '../mocks/data';
+import { mockTurnDetail } from '../mocks/fixtures/turns';
 
 const meta: Meta<typeof TurnInspector> = {
   title: 'Debug UI/TurnInspector',

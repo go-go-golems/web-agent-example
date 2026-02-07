@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { EventTrackLane } from './EventTrackLane';
-import { mockEvents } from '../mocks/data';
+import { makeEvents } from '../mocks/factories';
 
 const meta: Meta<typeof EventTrackLane> = {
   title: 'Debug UI/EventTrackLane',
@@ -19,17 +19,18 @@ const meta: Meta<typeof EventTrackLane> = {
 
 export default meta;
 type Story = StoryObj<typeof EventTrackLane>;
+const baseEvents = makeEvents(6);
 
 export const Default: Story = {
   args: {
-    events: mockEvents,
+    events: baseEvents,
   },
 };
 
 export const WithSelection: Story = {
   args: {
-    events: mockEvents,
-    selectedSeq: mockEvents[0].seq,
+    events: baseEvents,
+    selectedSeq: baseEvents[0].seq,
   },
 };
 
@@ -41,15 +42,12 @@ export const Empty: Story = {
 
 export const SingleEvent: Story = {
   args: {
-    events: [mockEvents[0]],
+    events: [baseEvents[0]],
   },
 };
 
 export const ManyEvents: Story = {
   args: {
-    events: [
-      ...mockEvents,
-      ...mockEvents.map((e, i) => ({ ...e, seq: e.seq + 1000000 * (i + 1), id: `${e.id}-dup${i}` })),
-    ],
+    events: makeEvents(12),
   },
 };
