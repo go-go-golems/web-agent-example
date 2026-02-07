@@ -7,6 +7,7 @@
     "build": "tsc && vite build",
     "test:unit": "vitest run",
     "check:helpers:dedupe": "bash scripts/check-no-duplicate-helpers.sh",
+    "check:styles:inline-runtime": "bash scripts/check-no-runtime-inline-styles.sh",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6007",
     "build-storybook": "storybook build"
