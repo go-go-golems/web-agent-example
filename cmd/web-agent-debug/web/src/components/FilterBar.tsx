@@ -1,5 +1,6 @@
 import React from 'react';
 import type { BlockKind } from '../types';
+import { getBlockPresentation } from '../ui/presentation/blocks';
 
 export interface FilterState {
   blockKinds: BlockKind[];
@@ -108,7 +109,7 @@ export function FilterBar({ filters, onFiltersChange, onClose }: FilterBarProps)
             <FilterChip
               key={kind}
               label={kind}
-              icon={getKindIcon(kind)}
+              icon={getBlockPresentation(kind).icon}
               active={filters.blockKinds.includes(kind)}
               onClick={() => toggleBlockKind(kind)}
               colorClass={`kind-${kind}`}
@@ -309,18 +310,6 @@ function FilterChip({ label, icon, active, onClick, colorClass }: FilterChipProp
       `}</style>
     </button>
   );
-}
-
-function getKindIcon(kind: BlockKind): string {
-  switch (kind) {
-    case 'system': return '⚙️';
-    case 'user': return '👤';
-    case 'llm_text': return '🤖';
-    case 'tool_call': return '🔧';
-    case 'tool_use': return '📤';
-    case 'reasoning': return '💭';
-    default: return '📦';
-  }
 }
 
 export default FilterBar;

@@ -1,5 +1,7 @@
 import React from 'react';
 import type { ParsedTurn, ParsedBlock } from '../types';
+import { formatPhaseLabel } from '../ui/format/phase';
+import { truncateText } from '../ui/format/text';
 
 export type BlockDiffStatus = 'same' | 'added' | 'removed' | 'changed' | 'reordered';
 
@@ -117,9 +119,9 @@ interface DiffHeaderProps {
 function DiffHeader({ phaseA, phaseB }: DiffHeaderProps) {
   return (
     <div className="diff-header">
-      <span className="phase-label phase-a">{formatPhase(phaseA)}</span>
+      <span className="phase-label phase-a">{formatPhaseLabel(phaseA)}</span>
       <span className="diff-arrow">→</span>
-      <span className="phase-label phase-b">{formatPhase(phaseB)}</span>
+      <span className="phase-label phase-b">{formatPhaseLabel(phaseB)}</span>
 
       <style>{`
         .diff-header {
@@ -358,7 +360,7 @@ function BlockPreview({ block, dimmed, highlighted }: BlockPreviewProps) {
         <span className="block-kind">{kind}</span>
       </div>
       <div className="block-preview-content">
-        {text && truncate(text, 50)}
+        {text && truncateText(text, 50)}
         {name && <span className="tool-name">{name}</span>}
         {!text && !name && <span className="no-content">—</span>}
       </div>
@@ -486,18 +488,6 @@ function MetadataDiff({ changes }: MetadataDiffProps) {
   );
 }
 
-// Helper functions
-
-function formatPhase(phase: string): string {
-  switch (phase) {
-    case 'pre_inference': return 'Pre-Inference';
-    case 'post_inference': return 'Post-Inference';
-    case 'post_tools': return 'Post-Tools';
-    case 'final': return 'Final';
-    default: return phase;
-  }
-}
-
 function getStatusIcon(status: BlockDiffStatus): string {
   switch (status) {
     case 'same': return '=';
@@ -506,11 +496,6 @@ function getStatusIcon(status: BlockDiffStatus): string {
     case 'changed': return '~';
     case 'reordered': return '↔';
   }
-}
-
-function truncate(str: string, maxLen: number): string {
-  if (str.length <= maxLen) return str;
-  return str.slice(0, maxLen) + '...';
 }
 
 // Diff computation - identity-aware (uses block id or kind+index as fallback)

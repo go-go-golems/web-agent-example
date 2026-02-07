@@ -1,5 +1,8 @@
 import React from 'react';
 import type { TimelineEntity } from '../types';
+import { formatTimeShort } from '../ui/format/time';
+import { safeStringify, truncateText } from '../ui/format/text';
+import { getTimelineKindPresentation } from '../ui/presentation/timeline';
 
 export interface ProjectionLaneProps {
   entities: TimelineEntity[];
@@ -54,8 +57,8 @@ interface EntityCardProps {
 
 function EntityCard({ entity, selected, onClick }: EntityCardProps) {
   const { id, kind, created_at, version, props } = entity;
-  const time = new Date(created_at).toLocaleTimeString();
-  const kindInfo = getKindInfo(kind);
+  const time = formatTimeShort(created_at);
+  const kindInfo = getTimelineKindPresentation(kind);
 
   return (
     <div
@@ -97,7 +100,7 @@ function EntityCard({ entity, selected, onClick }: EntityCardProps) {
       {kind === 'tool_result' && (
         <div className="entity-summary">
           <span className="result-preview">
-            {truncate(JSON.stringify(props.result), 30)}
+            {truncateText(safeStringify(props.result), 30)}
           </span>
         </div>
       )}
@@ -207,28 +210,6 @@ function EntityCard({ entity, selected, onClick }: EntityCardProps) {
       `}</style>
     </div>
   );
-}
-
-function getKindInfo(kind: string): { icon: string; color: string } {
-  switch (kind) {
-    case 'message':
-      return { icon: '💬', color: 'var(--accent-blue)' };
-    case 'tool_call':
-      return { icon: '🔧', color: 'var(--accent-yellow)' };
-    case 'tool_result':
-      return { icon: '📤', color: 'var(--accent-cyan)' };
-    case 'thinking_mode':
-      return { icon: '💭', color: 'var(--accent-purple)' };
-    case 'planning':
-      return { icon: '📋', color: 'var(--accent-green)' };
-    default:
-      return { icon: '📦', color: 'var(--border-color)' };
-  }
-}
-
-function truncate(str: string, maxLen: number): string {
-  if (str.length <= maxLen) return str;
-  return str.slice(0, maxLen) + '...';
 }
 
 export default ProjectionLane;

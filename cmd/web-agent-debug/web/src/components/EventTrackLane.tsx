@@ -1,5 +1,7 @@
 import React from 'react';
 import type { SemEvent } from '../types';
+import { formatTimeShort } from '../ui/format/time';
+import { getEventPresentation } from '../ui/presentation/events';
 
 export interface EventTrackLaneProps {
   events: SemEvent[];
@@ -54,8 +56,8 @@ interface EventDotProps {
 
 function EventDot({ event, selected, onClick }: EventDotProps) {
   const { type, id, stream_id, received_at } = event;
-  const time = new Date(received_at).toLocaleTimeString();
-  const typeInfo = getEventTypeInfo(type);
+  const time = formatTimeShort(received_at);
+  const typeInfo = getEventPresentation(type);
 
   return (
     <div
@@ -131,24 +133,6 @@ function EventDot({ event, selected, onClick }: EventDotProps) {
       `}</style>
     </div>
   );
-}
-
-function getEventTypeInfo(type: string): { icon: string; color: string } {
-  if (type.startsWith('llm.')) {
-    if (type === 'llm.start') return { icon: '▶️', color: 'var(--accent-green)' };
-    if (type === 'llm.delta') return { icon: '📝', color: 'var(--accent-blue)' };
-    if (type === 'llm.final') return { icon: '✅', color: 'var(--accent-green)' };
-    if (type.includes('thinking')) return { icon: '💭', color: 'var(--accent-purple)' };
-    return { icon: '🤖', color: 'var(--accent-blue)' };
-  }
-  if (type.startsWith('tool.')) {
-    if (type === 'tool.start') return { icon: '🔧', color: 'var(--accent-yellow)' };
-    if (type === 'tool.result') return { icon: '📤', color: 'var(--accent-cyan)' };
-    if (type === 'tool.done') return { icon: '✓', color: 'var(--accent-green)' };
-    return { icon: '🔧', color: 'var(--accent-yellow)' };
-  }
-  if (type === 'log') return { icon: '📋', color: 'var(--text-muted)' };
-  return { icon: '📦', color: 'var(--border-color)' };
 }
 
 export default EventTrackLane;

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import type { SemEvent, ParsedBlock, TimelineEntity } from '../types';
 import { CorrelationIdBar } from './CorrelationIdBar';
+import { formatDateTime } from '../ui/format/time';
+import { getEventPresentation } from '../ui/presentation/events';
 
 export type ViewMode = 'semantic' | 'sem' | 'raw';
 
@@ -169,8 +171,11 @@ interface SemanticViewProps {
 
 function SemanticView({ event }: SemanticViewProps) {
   const { type, id, received_at, data } = event;
-  const time = new Date(received_at).toLocaleString();
-  const typeInfo = getEventTypeInfo(type);
+  const time = formatDateTime(received_at);
+  const typeInfo = getEventPresentation(type, {
+    thinkingIcon: 'bot',
+    unknownColor: 'var(--text-muted)',
+  });
 
   return (
     <div className="semantic-view">
@@ -586,21 +591,6 @@ function TrustSignals({ checks }: TrustSignalsProps) {
       `}</style>
     </div>
   );
-}
-
-function getEventTypeInfo(type: string): { icon: string; color: string } {
-  if (type.startsWith('llm.')) {
-    if (type === 'llm.start') return { icon: '▶️', color: 'var(--accent-green)' };
-    if (type === 'llm.delta') return { icon: '📝', color: 'var(--accent-blue)' };
-    if (type === 'llm.final') return { icon: '✅', color: 'var(--accent-green)' };
-    return { icon: '🤖', color: 'var(--accent-blue)' };
-  }
-  if (type.startsWith('tool.')) {
-    if (type === 'tool.start') return { icon: '🔧', color: 'var(--accent-yellow)' };
-    if (type === 'tool.result') return { icon: '📤', color: 'var(--accent-cyan)' };
-    return { icon: '🔧', color: 'var(--accent-yellow)' };
-  }
-  return { icon: '📦', color: 'var(--text-muted)' };
 }
 
 export default EventInspector;

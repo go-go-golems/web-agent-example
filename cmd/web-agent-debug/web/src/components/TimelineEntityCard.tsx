@@ -1,5 +1,8 @@
 import React from 'react';
 import type { TimelineEntity } from '../types';
+import { formatTimeShort } from '../ui/format/time';
+import { safeStringify, truncateText } from '../ui/format/text';
+import { getTimelineKindPresentation } from '../ui/presentation/timeline';
 
 export interface TimelineEntityCardProps {
   entity: TimelineEntity;
@@ -10,8 +13,8 @@ export interface TimelineEntityCardProps {
 
 export function TimelineEntityCard({ entity, selected = false, onClick, compact = false }: TimelineEntityCardProps) {
   const { id, kind, created_at, version, props } = entity;
-  const time = new Date(created_at).toLocaleTimeString();
-  const kindInfo = getKindInfo(kind);
+  const time = formatTimeShort(created_at);
+  const kindInfo = getTimelineKindPresentation(kind);
 
   return (
     <div
@@ -45,25 +48,6 @@ export function TimelineEntityCard({ entity, selected = false, onClick, compact 
       {!compact && renderEntityContent(kind, props)}
     </div>
   );
-}
-
-function getKindInfo(kind: string): { icon: string; color: string; badgeClass: string } {
-  switch (kind) {
-    case 'message':
-      return { icon: '💬', color: 'var(--accent-blue)', badgeClass: 'badge-blue' };
-    case 'tool_call':
-      return { icon: '🔧', color: 'var(--accent-yellow)', badgeClass: 'badge-yellow' };
-    case 'tool_result':
-      return { icon: '📤', color: 'var(--accent-cyan)', badgeClass: 'badge-cyan' };
-    case 'thinking_mode':
-      return { icon: '💭', color: 'var(--accent-purple)', badgeClass: 'badge-purple' };
-    case 'planning':
-      return { icon: '📋', color: 'var(--accent-green)', badgeClass: 'badge-green' };
-    case 'log':
-      return { icon: '📝', color: 'var(--text-muted)', badgeClass: 'badge-blue' };
-    default:
-      return { icon: '📦', color: 'var(--border-color)', badgeClass: 'badge-blue' };
-  }
 }
 
 function truncateId(id: string): string {
@@ -109,7 +93,7 @@ function renderEntityContent(kind: string, props: Record<string, unknown>): Reac
       const result = props.result;
       return (
         <pre className="mt-2 text-xs" style={{ maxHeight: '60px', overflow: 'hidden' }}>
-          {truncateText(JSON.stringify(result, null, 2), 80)}
+          {truncateText(safeStringify(result, 2), 80)}
         </pre>
       );
     }
@@ -117,18 +101,12 @@ function renderEntityContent(kind: string, props: Record<string, unknown>): Reac
       if (Object.keys(props).length > 0) {
         return (
           <pre className="mt-2 text-xs" style={{ maxHeight: '40px', overflow: 'hidden' }}>
-            {truncateText(JSON.stringify(props), 60)}
+            {truncateText(safeStringify(props), 60)}
           </pre>
         );
       }
       return null;
   }
-}
-
-function truncateText(text: string | undefined, maxLength: number): string {
-  if (!text) return '';
-  if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength) + '...';
 }
 
 export default TimelineEntityCard;

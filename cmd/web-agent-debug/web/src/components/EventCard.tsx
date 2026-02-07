@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import type { SemEvent } from '../types';
+import { formatTimeShort } from '../ui/format/time';
+import { safeStringify, truncateText } from '../ui/format/text';
+import { getEventPresentation } from '../ui/presentation/events';
 
 export interface EventCardProps {
   event: SemEvent;
@@ -12,8 +15,8 @@ export function EventCard({ event, selected = false, onClick, compact = false }:
   const [showRaw, setShowRaw] = useState(false);
   const { type, id, seq, stream_id, data, received_at } = event;
 
-  const typeInfo = getEventTypeInfo(type);
-  const time = new Date(received_at).toLocaleTimeString();
+  const typeInfo = getEventPresentation(type);
+  const time = formatTimeShort(received_at);
 
   return (
     <div
@@ -62,7 +65,7 @@ export function EventCard({ event, selected = false, onClick, compact = false }:
       {!compact && (
         showRaw ? (
           <pre style={{ fontSize: '11px', marginTop: '8px', maxHeight: '150px', overflow: 'auto' }}>
-            {JSON.stringify(data, null, 2)}
+            {safeStringify(data, 2)}
           </pre>
         ) : (
           <div className="mt-2">
@@ -72,24 +75,6 @@ export function EventCard({ event, selected = false, onClick, compact = false }:
       )}
     </div>
   );
-}
-
-function getEventTypeInfo(type: string): { icon: string; color: string; badgeClass: string } {
-  if (type.startsWith('llm.')) {
-    if (type === 'llm.start') return { icon: '▶️', color: 'var(--accent-green)', badgeClass: 'badge-green' };
-    if (type === 'llm.delta') return { icon: '📝', color: 'var(--accent-blue)', badgeClass: 'badge-blue' };
-    if (type === 'llm.final') return { icon: '✅', color: 'var(--accent-green)', badgeClass: 'badge-green' };
-    if (type.includes('thinking')) return { icon: '💭', color: 'var(--accent-purple)', badgeClass: 'badge-purple' };
-    return { icon: '🤖', color: 'var(--accent-blue)', badgeClass: 'badge-blue' };
-  }
-  if (type.startsWith('tool.')) {
-    if (type === 'tool.start') return { icon: '🔧', color: 'var(--accent-yellow)', badgeClass: 'badge-yellow' };
-    if (type === 'tool.result') return { icon: '📤', color: 'var(--accent-cyan)', badgeClass: 'badge-cyan' };
-    if (type === 'tool.done') return { icon: '✓', color: 'var(--accent-green)', badgeClass: 'badge-green' };
-    return { icon: '🔧', color: 'var(--accent-yellow)', badgeClass: 'badge-yellow' };
-  }
-  if (type === 'log') return { icon: '📋', color: 'var(--text-muted)', badgeClass: 'badge-blue' };
-  return { icon: '📦', color: 'var(--border-color)', badgeClass: 'badge-blue' };
 }
 
 function truncateId(id: string): string {
@@ -135,18 +120,12 @@ function renderEventContent(type: string, data: unknown): React.ReactNode {
     case 'tool.result':
       return (
         <pre className="text-xs" style={{ maxHeight: '60px', overflow: 'hidden' }}>
-          {truncateText(JSON.stringify(d.result), 80)}
+          {truncateText(safeStringify(d.result), 80)}
         </pre>
       );
     default:
       return null;
   }
-}
-
-function truncateText(text: string | undefined, maxLength: number): string {
-  if (!text) return '';
-  if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength) + '...';
 }
 
 export default EventCard;

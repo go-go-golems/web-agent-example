@@ -4,6 +4,8 @@ import { BlockCard } from './BlockCard';
 import { CorrelationIdBar } from './CorrelationIdBar';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { selectPhase, setComparePhases } from '../store/uiSlice';
+import { formatPhaseLabel } from '../ui/format/phase';
+import { formatTimeShort } from '../ui/format/time';
 
 export interface TurnInspectorProps {
   turnDetail: TurnDetail;
@@ -56,7 +58,7 @@ export function TurnInspector({ turnDetail }: TurnInspectorProps) {
               disabled={!available}
               style={{ opacity: available ? 1 : 0.5 }}
             >
-              {formatPhaseName(phase)}
+              {formatPhaseLabel(phase)}
               {phases[phase] && (
                 <span className="text-xs text-muted" style={{ marginLeft: '4px' }}>
                   ({phases[phase]!.turn.blocks.length})
@@ -82,7 +84,7 @@ export function TurnInspector({ turnDetail }: TurnInspectorProps) {
             <option value="">Select phase A</option>
             {availablePhases.map((p) => (
               <option key={p} value={p}>
-                {formatPhaseName(p)}
+                {formatPhaseLabel(p)}
               </option>
             ))}
           </select>
@@ -98,7 +100,7 @@ export function TurnInspector({ turnDetail }: TurnInspectorProps) {
             <option value="">Select phase B</option>
             {availablePhases.map((p) => (
               <option key={p} value={p}>
-                {formatPhaseName(p)}
+                {formatPhaseLabel(p)}
               </option>
             ))}
           </select>
@@ -109,7 +111,7 @@ export function TurnInspector({ turnDetail }: TurnInspectorProps) {
       {currentPhaseData && (
         <div className="mb-4">
           <div className="text-xs text-muted mb-2">
-            Captured: {formatTime(currentPhaseData.captured_at)}
+            Captured: {formatTimeShort(currentPhaseData.captured_at)}
           </div>
         </div>
       )}
@@ -241,26 +243,6 @@ function MetadataField({ name, value }: MetadataFieldProps) {
       )}
     </div>
   );
-}
-
-function formatPhaseName(phase: TurnPhase): string {
-  switch (phase) {
-    case 'pre_inference':
-      return 'Pre-Inference';
-    case 'post_inference':
-      return 'Post-Inference';
-    case 'post_tools':
-      return 'Post-Tools';
-    case 'final':
-      return 'Final';
-    default:
-      return phase;
-  }
-}
-
-function formatTime(isoString: string): string {
-  const date = new Date(isoString);
-  return date.toLocaleTimeString();
 }
 
 export default TurnInspector;

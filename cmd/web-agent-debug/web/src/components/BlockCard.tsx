@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import type { ParsedBlock, BlockKind } from '../types';
+import type { ParsedBlock } from '../types';
+import { safeStringify, truncateText } from '../ui/format/text';
+import { getBlockPresentation } from '../ui/presentation/blocks';
 
 export interface BlockCardProps {
   block: ParsedBlock;
@@ -22,6 +24,7 @@ export function BlockCard({ block, isNew = false, showIndex = true, compact = fa
   const toolArgs = payload.args as Record<string, unknown> | undefined;
   const toolResult = payload.result as unknown;
   const toolId = payload.id as string | undefined;
+  const kindPresentation = getBlockPresentation(kind);
 
   const hasMetadata = Object.keys(metadata).length > 0;
   
@@ -47,8 +50,8 @@ export function BlockCard({ block, isNew = false, showIndex = true, compact = fa
               #{index}
             </span>
           )}
-          <span className={`badge ${getKindBadgeClass(kind)}`}>
-            {getKindIcon(kind)} {kind}
+          <span className={`badge ${kindPresentation.badgeClass}`}>
+            {kindPresentation.icon} {kind}
           </span>
           {role && role !== kind && (
             <span className="text-xs text-secondary">({role})</span>
@@ -83,7 +86,7 @@ export function BlockCard({ block, isNew = false, showIndex = true, compact = fa
       {/* Content */}
       {showRaw ? (
         <pre style={{ fontSize: '12px', maxHeight: '200px', overflow: 'auto' }}>
-          {JSON.stringify({ payload, metadata }, null, 2)}
+          {safeStringify({ payload, metadata }, 2)}
         </pre>
       ) : (
         <div className="block-content">
@@ -107,7 +110,7 @@ export function BlockCard({ block, isNew = false, showIndex = true, compact = fa
               </div>
               {toolArgs && (
                 <pre style={{ fontSize: '11px', marginTop: '4px' }}>
-                  {JSON.stringify(toolArgs, null, 2)}
+                  {safeStringify(toolArgs, 2)}
                 </pre>
               )}
             </div>
@@ -122,7 +125,7 @@ export function BlockCard({ block, isNew = false, showIndex = true, compact = fa
                 </span>
               )}
               <pre style={{ fontSize: '11px', marginTop: '4px' }}>
-                {JSON.stringify(toolResult, null, 2)}
+                {safeStringify(toolResult, 2)}
               </pre>
             </div>
           )}
@@ -156,7 +159,7 @@ interface MetadataItemProps {
 function MetadataItem({ name, value }: MetadataItemProps) {
   const [expanded, setExpanded] = useState(false);
   const isComplex = typeof value === 'object' && value !== null;
-  const displayValue = isComplex ? JSON.stringify(value) : String(value);
+  const displayValue = isComplex ? safeStringify(value) : String(value);
   const isLong = displayValue.length > 50;
 
   return (
@@ -179,7 +182,7 @@ function MetadataItem({ name, value }: MetadataItemProps) {
       </div>
       {expanded ? (
         <pre className="text-xs mt-1" style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
-          {isComplex ? JSON.stringify(value, null, 2) : displayValue}
+          {isComplex ? safeStringify(value, 2) : displayValue}
         </pre>
       ) : (
         <div className="text-xs text-secondary mt-1" style={{ 
@@ -192,35 +195,6 @@ function MetadataItem({ name, value }: MetadataItemProps) {
       )}
     </div>
   );
-}
-
-function getKindIcon(kind: BlockKind): string {
-  switch (kind) {
-    case 'system': return '⚙️';
-    case 'user': return '👤';
-    case 'llm_text': return '🤖';
-    case 'tool_call': return '🔧';
-    case 'tool_use': return '📤';
-    case 'reasoning': return '💭';
-    default: return '📦';
-  }
-}
-
-function getKindBadgeClass(kind: BlockKind): string {
-  switch (kind) {
-    case 'system': return 'badge-purple';
-    case 'user': return 'badge-blue';
-    case 'llm_text': return 'badge-green';
-    case 'tool_call': return 'badge-yellow';
-    case 'tool_use': return 'badge-cyan';
-    case 'reasoning': return 'badge-red';
-    default: return 'badge-blue';
-  }
-}
-
-function truncateText(text: string, maxLength: number): string {
-  if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength) + '...';
 }
 
 export default BlockCard;

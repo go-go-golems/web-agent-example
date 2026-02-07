@@ -1,5 +1,8 @@
 import React from 'react';
 import type { TurnSnapshot } from '../types';
+import { formatPhaseShort } from '../ui/format/phase';
+import { formatTimeShort } from '../ui/format/time';
+import { getBlockPresentation } from '../ui/presentation/blocks';
 
 export interface StateTrackLaneProps {
   turns: TurnSnapshot[];
@@ -55,7 +58,7 @@ interface TurnCardProps {
 function TurnCard({ turn, selected, onClick }: TurnCardProps) {
   const { turn_id, session_id, phase, turn: turnData, created_at_ms } = turn;
   const blockCount = turnData.blocks.length;
-  const time = new Date(created_at_ms).toLocaleTimeString();
+  const time = formatTimeShort(created_at_ms);
 
   // Get block kind summary
   const kindCounts = turnData.blocks.reduce((acc, block) => {
@@ -69,7 +72,7 @@ function TurnCard({ turn, selected, onClick }: TurnCardProps) {
       onClick={onClick}
     >
       <div className="turn-card-header">
-        <span className={`phase-badge phase-${phase}`}>{formatPhase(phase)}</span>
+        <span className={`phase-badge phase-${phase}`}>{formatPhaseShort(phase)}</span>
         <span className="turn-time">{time}</span>
       </div>
 
@@ -85,7 +88,7 @@ function TurnCard({ turn, selected, onClick }: TurnCardProps) {
       <div className="turn-card-blocks">
         {Object.entries(kindCounts).map(([kind, count]) => (
           <span key={kind} className={`block-chip block-kind-${kind}`}>
-            {getKindIcon(kind)} {count}
+            {getBlockPresentation(kind).icon} {count}
           </span>
         ))}
       </div>
@@ -184,28 +187,6 @@ function TurnCard({ turn, selected, onClick }: TurnCardProps) {
       `}</style>
     </div>
   );
-}
-
-function formatPhase(phase: string): string {
-  switch (phase) {
-    case 'pre_inference': return 'Pre';
-    case 'post_inference': return 'Post';
-    case 'post_tools': return 'Tools';
-    case 'final': return 'Final';
-    default: return phase;
-  }
-}
-
-function getKindIcon(kind: string): string {
-  switch (kind) {
-    case 'system': return '⚙️';
-    case 'user': return '👤';
-    case 'llm_text': return '🤖';
-    case 'tool_call': return '🔧';
-    case 'tool_use': return '📤';
-    case 'reasoning': return '💭';
-    default: return '📦';
-  }
 }
 
 export default StateTrackLane;
