@@ -18,6 +18,16 @@ npm run storybook
 - **Redux Toolkit** for state management
 - **React Router v6** for navigation
 
+## Helper Usage Rules
+
+- Prefer shared helpers under `src/ui/format` and `src/ui/presentation` for formatting, icon/badge mapping, and timeline/event/block presentation logic.
+- Do not duplicate formatter/mapping helpers inside components or routes when a shared helper already exists.
+- Keep component-local helpers only for strictly local view concerns that are not reused elsewhere.
+- When introducing new shared helper behavior, add or update unit tests in:
+  - `src/ui/format/format.test.ts`
+  - `src/ui/presentation/presentation.test.ts`
+- If adding a new helper module, migrate call sites in the same change rather than leaving duplicate interim implementations.
+
 ## Style Contract
 
 Styling follows a hybrid contract: namespaced classes as the primary API, with optional `data-part` hooks for targeted overrides in reusable shells.
