@@ -61,6 +61,23 @@ Styling follows a hybrid contract: namespaced classes as the primary API, with o
   - Runtime TSX files must not include inline `<style>{...}</style>` blocks.
   - Add styles in the corresponding `src/styles/components/*.css` file instead.
 
+## Storybook Fixture/Factory/Scenario Policy
+
+- Source-of-truth layers:
+  - Baseline data in `src/mocks/fixtures/*`
+  - Deterministic builders in `src/mocks/factories/*`
+  - Reusable story contexts in `src/mocks/scenarios/*`
+  - MSW handlers in `src/mocks/msw/*`
+- Story authoring order:
+  - Use an existing scenario first.
+  - If missing, add/extend a scenario.
+  - If scenario needs a new data shape, extend factories (not story-local arrays).
+- Handler policy:
+  - Do not define per-story `http.get(...)` blocks when centralized handler helpers can express the case.
+  - Prefer `defaultHandlers` / `createDefaultDebugHandlers(...)`.
+- Legacy policy:
+  - Avoid reintroducing `src/mocks/data.ts`-style compatibility layers; import fixtures/factories/scenarios directly.
+
 ## Component Roadmap
 
 See PI-013 tasks.md for full breakdown:
