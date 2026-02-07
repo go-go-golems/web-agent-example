@@ -88,7 +88,7 @@ export function AnomalyPanel({ anomalies, isOpen, onClose, onAnomalyClick }: Ano
         {/* Anomaly list */}
         <div className="anomaly-list">
           {filteredAnomalies.length === 0 ? (
-            <div className="empty-state">
+            <div className="anomaly-empty-state">
               No anomalies in this category
             </div>
           ) : (
@@ -149,38 +149,38 @@ function AnomalyDetail({ anomaly, onClose }: AnomalyDetailProps) {
 
   return (
     <div className="anomaly-detail">
-      <div className="detail-header">
+      <div className="anomaly-detail-header">
         <h4>Anomaly Details</h4>
         <button className="btn btn-ghost" onClick={onClose}>✕</button>
       </div>
 
-      <div className="detail-content">
-        <div className="detail-row">
-          <span className="detail-label">Type:</span>
-          <span className="detail-value">{getTypeLabel(type)}</span>
+      <div className="anomaly-detail-content">
+        <div className="anomaly-detail-row">
+          <span className="anomaly-detail-label">Type:</span>
+          <span className="anomaly-detail-value">{getTypeLabel(type)}</span>
         </div>
-        <div className="detail-row">
-          <span className="detail-label">Severity:</span>
+        <div className="anomaly-detail-row">
+          <span className="anomaly-detail-label">Severity:</span>
           <span className={`severity-badge severity-${severity}`}>{severity}</span>
         </div>
-        <div className="detail-row">
-          <span className="detail-label">Time:</span>
-          <span className="detail-value">{new Date(timestamp).toLocaleString()}</span>
+        <div className="anomaly-detail-row">
+          <span className="anomaly-detail-label">Time:</span>
+          <span className="anomaly-detail-value">{new Date(timestamp).toLocaleString()}</span>
         </div>
-        <div className="detail-row">
-          <span className="detail-label">Message:</span>
-          <span className="detail-value">{message}</span>
+        <div className="anomaly-detail-row">
+          <span className="anomaly-detail-label">Message:</span>
+          <span className="anomaly-detail-value">{message}</span>
         </div>
         {details && (
-          <div className="detail-row">
-            <span className="detail-label">Details:</span>
-            <pre className="detail-pre">{details}</pre>
+          <div className="anomaly-detail-row">
+            <span className="anomaly-detail-label">Details:</span>
+            <pre className="anomaly-detail-pre">{details}</pre>
           </div>
         )}
         {relatedIds && (
-          <div className="detail-row">
-            <span className="detail-label">Related:</span>
-            <div className="related-ids">
+          <div className="anomaly-detail-row">
+            <span className="anomaly-detail-label">Related:</span>
+            <div className="anomaly-related-ids">
               {relatedIds.eventId && <span>Event: {relatedIds.eventId}</span>}
               {relatedIds.turnId && <span>Turn: {relatedIds.turnId}</span>}
               {relatedIds.blockIndex !== undefined && <span>Block: #{relatedIds.blockIndex}</span>}

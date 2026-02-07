@@ -28,7 +28,7 @@
 
 .turn-card.selected {
   border-color: var(--accent-purple);
-  background: rgba(139, 92, 246, 0.1);
+  background: var(--accent-purple-a10);
 }
 
 .turn-card-header {
@@ -47,22 +47,22 @@
 }
 
 .phase-pre_inference {
-  background: rgba(245, 158, 11, 0.2);
+  background: var(--accent-yellow-a20);
   color: var(--accent-yellow);
 }
 
 .phase-post_inference {
-  background: rgba(59, 130, 246, 0.2);
+  background: var(--accent-blue-a20);
   color: var(--accent-blue);
 }
 
 .phase-post_tools {
-  background: rgba(6, 182, 212, 0.2);
+  background: var(--accent-cyan-a20);
   color: var(--accent-cyan);
 }
 
 .phase-final {
-  background: rgba(16, 185, 129, 0.2);
+  background: var(--accent-green-a20);
   color: var(--accent-green);
 }
 

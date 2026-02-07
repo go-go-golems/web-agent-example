@@ -29,7 +29,7 @@
 
 .event-dot.selected {
   border-color: var(--accent-blue);
-  background: rgba(59, 130, 246, 0.1);
+  background: var(--accent-blue-a10);
 }
 
 .event-dot-header {

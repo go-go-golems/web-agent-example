@@ -65,24 +65,24 @@ export function TimelineLanes({
   return (
     <div className="timeline-lanes" ref={containerRef}>
       {/* Header row */}
-      <div className="timeline-header">
-        <div className="lane-header">
-          <span className="lane-title">📋 State Track</span>
-          <span className="lane-count">{turns.length} turns</span>
+      <div className="timeline-lanes-header">
+        <div className="timeline-lane-header">
+          <span className="timeline-lane-title">📋 State Track</span>
+          <span className="timeline-lane-count">{turns.length} turns</span>
         </div>
-        <div className="lane-header">
-          <span className="lane-title">⚡ Events</span>
-          <span className="lane-count">{events.length} events</span>
+        <div className="timeline-lane-header">
+          <span className="timeline-lane-title">⚡ Events</span>
+          <span className="timeline-lane-count">{events.length} events</span>
         </div>
-        <div className="lane-header">
-          <span className="lane-title">🎯 Projection</span>
-          <span className="lane-count">{entities.length} entities</span>
+        <div className="timeline-lane-header">
+          <span className="timeline-lane-title">🎯 Projection</span>
+          <span className="timeline-lane-count">{entities.length} entities</span>
         </div>
       </div>
 
       {/* Lane columns */}
-      <div className="timeline-body">
-        <div className="lane state-lane" ref={stateRef}>
+      <div className="timeline-lanes-body">
+        <div className="timeline-lane timeline-lane-state" ref={stateRef}>
           <StateTrackLane
             turns={turns}
             selectedTurnId={selectedTurnId}
@@ -91,7 +91,7 @@ export function TimelineLanes({
           {isLive && <NowMarker />}
         </div>
 
-        <div className="lane event-lane" ref={eventRef}>
+        <div className="timeline-lane timeline-lane-event" ref={eventRef}>
           <EventTrackLane
             events={events}
             selectedSeq={selectedEventSeq}
@@ -100,7 +100,7 @@ export function TimelineLanes({
           {isLive && <NowMarker />}
         </div>
 
-        <div className="lane projection-lane" ref={projRef}>
+        <div className="timeline-lane timeline-lane-projection" ref={projRef}>
           <ProjectionLane
             entities={entities}
             selectedEntityId={selectedEntityId}

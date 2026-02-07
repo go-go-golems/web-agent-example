@@ -205,12 +205,12 @@
 }
 
 .event-inspector .trust-score.all-pass {
-  background: rgba(16, 185, 129, 0.2);
+  background: var(--accent-green-a20);
   color: var(--accent-green);
 }
 
 .event-inspector .trust-score.has-fail {
-  background: rgba(239, 68, 68, 0.2);
+  background: var(--accent-red-a20);
   color: var(--accent-red);
 }
 

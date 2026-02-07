@@ -29,7 +29,7 @@
 
 .entity-card.selected {
   border-color: var(--accent-green);
-  background: rgba(16, 185, 129, 0.1);
+  background: var(--accent-green-a10);
 }
 
 .entity-card-header {
@@ -84,24 +84,24 @@
 }
 
 .role-user {
-  background: rgba(59, 130, 246, 0.2);
+  background: var(--accent-blue-a20);
   color: var(--accent-blue);
 }
 
 .role-assistant {
-  background: rgba(16, 185, 129, 0.2);
+  background: var(--accent-green-a20);
   color: var(--accent-green);
 }
 
 .role-system {
-  background: rgba(139, 92, 246, 0.2);
+  background: var(--accent-purple-a20);
   color: var(--accent-purple);
 }
 
 .streaming-badge {
   font-size: 9px;
   padding: 1px 4px;
-  background: rgba(245, 158, 11, 0.2);
+  background: var(--accent-yellow-a20);
   color: var(--accent-yellow);
   border-radius: 3px;
 }

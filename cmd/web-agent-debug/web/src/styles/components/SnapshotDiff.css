@@ -60,12 +60,12 @@
 }
 
 .snapshot-diff .phase-a {
-  background: rgba(245, 158, 11, 0.2);
+  background: var(--accent-yellow-a20);
   color: var(--accent-yellow);
 }
 
 .snapshot-diff .phase-b {
-  background: rgba(16, 185, 129, 0.2);
+  background: var(--accent-green-a20);
   color: var(--accent-green);
 }
 
@@ -88,22 +88,22 @@
 }
 
 .snapshot-diff .summary-chip.added {
-  background: rgba(16, 185, 129, 0.2);
+  background: var(--accent-green-a20);
   color: var(--accent-green);
 }
 
 .snapshot-diff .summary-chip.removed {
-  background: rgba(239, 68, 68, 0.2);
+  background: var(--accent-red-a20);
   color: var(--accent-red);
 }
 
 .snapshot-diff .summary-chip.changed {
-  background: rgba(245, 158, 11, 0.2);
+  background: var(--accent-yellow-a20);
   color: var(--accent-yellow);
 }
 
 .snapshot-diff .summary-chip.reordered {
-  background: rgba(139, 92, 246, 0.2);
+  background: var(--accent-purple-a20);
   color: var(--accent-purple);
 }
 
@@ -158,19 +158,19 @@
 }
 
 .snapshot-diff .status-badge.status-added {
-  background: rgba(16, 185, 129, 0.2);
+  background: var(--accent-green-a20);
 }
 
 .snapshot-diff .status-badge.status-removed {
-  background: rgba(239, 68, 68, 0.2);
+  background: var(--accent-red-a20);
 }
 
 .snapshot-diff .status-badge.status-changed {
-  background: rgba(245, 158, 11, 0.2);
+  background: var(--accent-yellow-a20);
 }
 
 .snapshot-diff .status-badge.status-reordered {
-  background: rgba(139, 92, 246, 0.2);
+  background: var(--accent-purple-a20);
 }
 
 .snapshot-diff .change-list {
@@ -201,7 +201,7 @@
 
 .snapshot-diff .block-preview.highlighted {
   border-color: var(--accent-green);
-  background: rgba(16, 185, 129, 0.05);
+  background: var(--accent-green-a05);
 }
 
 .snapshot-diff .block-preview-header {
@@ -265,16 +265,16 @@
 }
 
 .snapshot-diff .meta-added .meta-type {
-  background: rgba(16, 185, 129, 0.2);
+  background: var(--accent-green-a20);
   color: var(--accent-green);
 }
 
 .snapshot-diff .meta-removed .meta-type {
-  background: rgba(239, 68, 68, 0.2);
+  background: var(--accent-red-a20);
   color: var(--accent-red);
 }
 
 .snapshot-diff .meta-changed .meta-type {
-  background: rgba(245, 158, 11, 0.2);
+  background: var(--accent-yellow-a20);
   color: var(--accent-yellow);
 }
