@@ -3,7 +3,7 @@ package thinkingmode
 import (
 	"encoding/json"
 
-	semMw "github.com/go-go-golems/pinocchio/pkg/sem/pb/proto/sem/middleware"
+	thinkingmodepb "github.com/go-go-golems/pinocchio/cmd/web-chat/thinkingmode/pb"
 	semregistry "github.com/go-go-golems/pinocchio/pkg/sem/registry"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
@@ -20,7 +20,7 @@ func registerSemHandlers() {
 		if err != nil {
 			return nil, err
 		}
-		m := &semMw.ThinkingModeStarted{ItemId: ev.ItemID, Data: data}
+		m := &thinkingmodepb.ThinkingModeStarted{ItemId: ev.ItemID, Data: data}
 		raw, err := protoToRaw(m)
 		if err != nil {
 			return nil, err
@@ -33,7 +33,7 @@ func registerSemHandlers() {
 		if err != nil {
 			return nil, err
 		}
-		m := &semMw.ThinkingModeUpdate{ItemId: ev.ItemID, Data: data}
+		m := &thinkingmodepb.ThinkingModeUpdate{ItemId: ev.ItemID, Data: data}
 		raw, err := protoToRaw(m)
 		if err != nil {
 			return nil, err
@@ -46,7 +46,7 @@ func registerSemHandlers() {
 		if err != nil {
 			return nil, err
 		}
-		m := &semMw.ThinkingModeCompleted{ItemId: ev.ItemID, Data: data, Success: ev.Success, Error: ev.Error}
+		m := &thinkingmodepb.ThinkingModeCompleted{ItemId: ev.ItemID, Data: data, Success: ev.Success, Error: ev.Error}
 		raw, err := protoToRaw(m)
 		if err != nil {
 			return nil, err
@@ -55,7 +55,7 @@ func registerSemHandlers() {
 	})
 }
 
-func payloadToProto(p *Payload) (*semMw.ThinkingModePayload, error) {
+func payloadToProto(p *Payload) (*thinkingmodepb.ThinkingModePayload, error) {
 	if p == nil {
 		return nil, nil
 	}
@@ -67,7 +67,7 @@ func payloadToProto(p *Payload) (*semMw.ThinkingModePayload, error) {
 		}
 		extra = st
 	}
-	return &semMw.ThinkingModePayload{
+	return &thinkingmodepb.ThinkingModePayload{
 		Mode:      p.Mode,
 		Phase:     p.Phase,
 		Reasoning: p.Reasoning,

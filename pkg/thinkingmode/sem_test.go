@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	semMw "github.com/go-go-golems/pinocchio/pkg/sem/pb/proto/sem/middleware"
+	thinkingmodepb "github.com/go-go-golems/pinocchio/cmd/web-chat/thinkingmode/pb"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
@@ -25,7 +25,7 @@ func TestThinkingModeSemProtoRoundTrip(t *testing.T) {
 		t.Fatalf("unexpected extra_data.source: %q", got)
 	}
 
-	msg := &semMw.ThinkingModeCompleted{
+	msg := &thinkingmodepb.ThinkingModeCompleted{
 		ItemId:  "item-1",
 		Data:    payload,
 		Success: true,
@@ -35,7 +35,7 @@ func TestThinkingModeSemProtoRoundTrip(t *testing.T) {
 		t.Fatalf("protoToRaw: %v", err)
 	}
 
-	var decoded semMw.ThinkingModeCompleted
+	var decoded thinkingmodepb.ThinkingModeCompleted
 	if err := protojson.Unmarshal(raw, &decoded); err != nil {
 		t.Fatalf("protojson.Unmarshal: %v", err)
 	}
@@ -56,4 +56,3 @@ func TestThinkingModeSemProtoRoundTrip(t *testing.T) {
 		t.Fatalf("expected sem envelope, got: %#v", envelope["sem"])
 	}
 }
-

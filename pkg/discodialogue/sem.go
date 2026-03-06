@@ -3,7 +3,7 @@ package discodialogue
 import (
 	"encoding/json"
 
-	semMw "github.com/go-go-golems/pinocchio/pkg/sem/pb/proto/sem/middleware"
+	thinkingmodepb "github.com/go-go-golems/pinocchio/cmd/web-chat/thinkingmode/pb"
 	semregistry "github.com/go-go-golems/pinocchio/pkg/sem/registry"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
@@ -15,7 +15,7 @@ func init() {
 
 func registerSemHandlers() {
 	semregistry.RegisterByType[*DialogueLineStartedEvent](func(ev *DialogueLineStartedEvent) ([][]byte, error) {
-		m := &semMw.DiscoDialogueLineStarted{ItemId: ev.ItemID, Data: linePayloadToProto(ev.Data)}
+		m := &thinkingmodepb.DiscoDialogueLineStarted{ItemId: ev.ItemID, Data: linePayloadToProto(ev.Data)}
 		raw, err := protoToRaw(m)
 		if err != nil {
 			return nil, err
@@ -24,7 +24,7 @@ func registerSemHandlers() {
 	})
 
 	semregistry.RegisterByType[*DialogueLineUpdateEvent](func(ev *DialogueLineUpdateEvent) ([][]byte, error) {
-		m := &semMw.DiscoDialogueLineUpdate{ItemId: ev.ItemID, Data: linePayloadToProto(ev.Data)}
+		m := &thinkingmodepb.DiscoDialogueLineUpdate{ItemId: ev.ItemID, Data: linePayloadToProto(ev.Data)}
 		raw, err := protoToRaw(m)
 		if err != nil {
 			return nil, err
@@ -33,7 +33,7 @@ func registerSemHandlers() {
 	})
 
 	semregistry.RegisterByType[*DialogueLineCompletedEvent](func(ev *DialogueLineCompletedEvent) ([][]byte, error) {
-		m := &semMw.DiscoDialogueLineCompleted{ItemId: ev.ItemID, Data: linePayloadToProto(ev.Data), Success: ev.Success, Error: ev.Error}
+		m := &thinkingmodepb.DiscoDialogueLineCompleted{ItemId: ev.ItemID, Data: linePayloadToProto(ev.Data), Success: ev.Success, Error: ev.Error}
 		raw, err := protoToRaw(m)
 		if err != nil {
 			return nil, err
@@ -42,7 +42,7 @@ func registerSemHandlers() {
 	})
 
 	semregistry.RegisterByType[*DialogueCheckStartedEvent](func(ev *DialogueCheckStartedEvent) ([][]byte, error) {
-		m := &semMw.DiscoDialogueCheckStarted{ItemId: ev.ItemID, Data: checkPayloadToProto(ev.Data)}
+		m := &thinkingmodepb.DiscoDialogueCheckStarted{ItemId: ev.ItemID, Data: checkPayloadToProto(ev.Data)}
 		raw, err := protoToRaw(m)
 		if err != nil {
 			return nil, err
@@ -51,7 +51,7 @@ func registerSemHandlers() {
 	})
 
 	semregistry.RegisterByType[*DialogueCheckUpdateEvent](func(ev *DialogueCheckUpdateEvent) ([][]byte, error) {
-		m := &semMw.DiscoDialogueCheckUpdate{ItemId: ev.ItemID, Data: checkPayloadToProto(ev.Data)}
+		m := &thinkingmodepb.DiscoDialogueCheckUpdate{ItemId: ev.ItemID, Data: checkPayloadToProto(ev.Data)}
 		raw, err := protoToRaw(m)
 		if err != nil {
 			return nil, err
@@ -60,7 +60,7 @@ func registerSemHandlers() {
 	})
 
 	semregistry.RegisterByType[*DialogueCheckCompletedEvent](func(ev *DialogueCheckCompletedEvent) ([][]byte, error) {
-		m := &semMw.DiscoDialogueCheckCompleted{ItemId: ev.ItemID, Data: checkPayloadToProto(ev.Data), Success: ev.Success, Error: ev.Error}
+		m := &thinkingmodepb.DiscoDialogueCheckCompleted{ItemId: ev.ItemID, Data: checkPayloadToProto(ev.Data), Success: ev.Success, Error: ev.Error}
 		raw, err := protoToRaw(m)
 		if err != nil {
 			return nil, err
@@ -69,7 +69,7 @@ func registerSemHandlers() {
 	})
 
 	semregistry.RegisterByType[*DialogueStateStartedEvent](func(ev *DialogueStateStartedEvent) ([][]byte, error) {
-		m := &semMw.DiscoDialogueStateStarted{ItemId: ev.ItemID, Data: statePayloadToProto(ev.Data)}
+		m := &thinkingmodepb.DiscoDialogueStateStarted{ItemId: ev.ItemID, Data: statePayloadToProto(ev.Data)}
 		raw, err := protoToRaw(m)
 		if err != nil {
 			return nil, err
@@ -78,7 +78,7 @@ func registerSemHandlers() {
 	})
 
 	semregistry.RegisterByType[*DialogueStateUpdateEvent](func(ev *DialogueStateUpdateEvent) ([][]byte, error) {
-		m := &semMw.DiscoDialogueStateUpdate{ItemId: ev.ItemID, Data: statePayloadToProto(ev.Data)}
+		m := &thinkingmodepb.DiscoDialogueStateUpdate{ItemId: ev.ItemID, Data: statePayloadToProto(ev.Data)}
 		raw, err := protoToRaw(m)
 		if err != nil {
 			return nil, err
@@ -87,7 +87,7 @@ func registerSemHandlers() {
 	})
 
 	semregistry.RegisterByType[*DialogueStateCompletedEvent](func(ev *DialogueStateCompletedEvent) ([][]byte, error) {
-		m := &semMw.DiscoDialogueStateCompleted{ItemId: ev.ItemID, Data: statePayloadToProto(ev.Data), Success: ev.Success, Error: ev.Error}
+		m := &thinkingmodepb.DiscoDialogueStateCompleted{ItemId: ev.ItemID, Data: statePayloadToProto(ev.Data), Success: ev.Success, Error: ev.Error}
 		raw, err := protoToRaw(m)
 		if err != nil {
 			return nil, err
@@ -96,11 +96,11 @@ func registerSemHandlers() {
 	})
 }
 
-func linePayloadToProto(p *DialogueLinePayload) *semMw.DiscoDialogueLinePayload {
+func linePayloadToProto(p *DialogueLinePayload) *thinkingmodepb.DiscoDialogueLinePayload {
 	if p == nil {
 		return nil
 	}
-	return &semMw.DiscoDialogueLinePayload{
+	return &thinkingmodepb.DiscoDialogueLinePayload{
 		DialogueId: p.DialogueID,
 		LineId:     p.LineID,
 		Persona:    p.Persona,
@@ -112,11 +112,11 @@ func linePayloadToProto(p *DialogueLinePayload) *semMw.DiscoDialogueLinePayload 
 	}
 }
 
-func checkPayloadToProto(p *DialogueCheckPayload) *semMw.DiscoDialogueCheckPayload {
+func checkPayloadToProto(p *DialogueCheckPayload) *thinkingmodepb.DiscoDialogueCheckPayload {
 	if p == nil {
 		return nil
 	}
-	return &semMw.DiscoDialogueCheckPayload{
+	return &thinkingmodepb.DiscoDialogueCheckPayload{
 		DialogueId: p.DialogueID,
 		LineId:     p.LineID,
 		CheckType:  p.CheckType,
@@ -127,11 +127,11 @@ func checkPayloadToProto(p *DialogueCheckPayload) *semMw.DiscoDialogueCheckPaylo
 	}
 }
 
-func statePayloadToProto(p *DialogueStatePayload) *semMw.DiscoDialogueStatePayload {
+func statePayloadToProto(p *DialogueStatePayload) *thinkingmodepb.DiscoDialogueStatePayload {
 	if p == nil {
 		return nil
 	}
-	return &semMw.DiscoDialogueStatePayload{
+	return &thinkingmodepb.DiscoDialogueStatePayload{
 		DialogueId: p.DialogueID,
 		Status:     p.Status,
 		Summary:    p.Summary,

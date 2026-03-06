@@ -3,7 +3,7 @@ package discodialogue
 import (
 	"testing"
 
-	semMw "github.com/go-go-golems/pinocchio/pkg/sem/pb/proto/sem/middleware"
+	thinkingmodepb "github.com/go-go-golems/pinocchio/cmd/web-chat/thinkingmode/pb"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
@@ -22,7 +22,7 @@ func TestDiscoDialogueLineSemProtoRoundTrip(t *testing.T) {
 		t.Fatalf("unexpected line payload: %#v", payload)
 	}
 
-	msg := &semMw.DiscoDialogueLineCompleted{
+	msg := &thinkingmodepb.DiscoDialogueLineCompleted{
 		ItemId:  "line-item-1",
 		Data:    payload,
 		Success: true,
@@ -32,7 +32,7 @@ func TestDiscoDialogueLineSemProtoRoundTrip(t *testing.T) {
 		t.Fatalf("protoToRaw: %v", err)
 	}
 
-	var decoded semMw.DiscoDialogueLineCompleted
+	var decoded thinkingmodepb.DiscoDialogueLineCompleted
 	if err := protojson.Unmarshal(raw, &decoded); err != nil {
 		t.Fatalf("protojson.Unmarshal: %v", err)
 	}
@@ -55,7 +55,7 @@ func TestDiscoDialogueCheckSemProtoRoundTrip(t *testing.T) {
 		t.Fatalf("unexpected check payload: %#v", payload)
 	}
 
-	msg := &semMw.DiscoDialogueCheckCompleted{
+	msg := &thinkingmodepb.DiscoDialogueCheckCompleted{
 		ItemId:  "check-item-1",
 		Data:    payload,
 		Success: false,
@@ -66,7 +66,7 @@ func TestDiscoDialogueCheckSemProtoRoundTrip(t *testing.T) {
 		t.Fatalf("protoToRaw: %v", err)
 	}
 
-	var decoded semMw.DiscoDialogueCheckCompleted
+	var decoded thinkingmodepb.DiscoDialogueCheckCompleted
 	if err := protojson.Unmarshal(raw, &decoded); err != nil {
 		t.Fatalf("protojson.Unmarshal: %v", err)
 	}
@@ -74,4 +74,3 @@ func TestDiscoDialogueCheckSemProtoRoundTrip(t *testing.T) {
 		t.Fatalf("unexpected decoded check payload: %#v", decoded)
 	}
 }
-
