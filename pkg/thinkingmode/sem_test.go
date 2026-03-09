@@ -3,43 +3,37 @@ package thinkingmode
 import (
 	"encoding/json"
 	"testing"
-
-	semMw "github.com/go-go-golems/pinocchio/pkg/sem/pb/proto/sem/middleware"
-	"google.golang.org/protobuf/encoding/protojson"
 )
 
 func TestThinkingModeSemProtoRoundTrip(t *testing.T) {
-	payload, err := payloadToProto(&Payload{
+	payload := semPayloadFromEventData(&Payload{
 		Mode:      "deep",
 		Phase:     "reasoning",
 		Reasoning: "careful pass",
 		ExtraData: map[string]any{"source": "unit-test"},
 	})
-	if err != nil {
-		t.Fatalf("payloadToProto: %v", err)
-	}
 	if payload.Mode != "deep" || payload.Phase != "reasoning" || payload.Reasoning != "careful pass" {
 		t.Fatalf("unexpected payload fields: %#v", payload)
 	}
-	if got := payload.ExtraData.GetFields()["source"].GetStringValue(); got != "unit-test" {
+	if got := payload.ExtraData["source"]; got != "unit-test" {
 		t.Fatalf("unexpected extra_data.source: %q", got)
 	}
 
-	msg := &semMw.ThinkingModeCompleted{
-		ItemId:  "item-1",
+	msg := &semThinkingModeCompleted{
+		ItemID:  "item-1",
 		Data:    payload,
 		Success: true,
 	}
-	raw, err := protoToRaw(msg)
+	raw, err := marshalJSONRaw(msg)
 	if err != nil {
-		t.Fatalf("protoToRaw: %v", err)
+		t.Fatalf("marshalJSONRaw: %v", err)
 	}
 
-	var decoded semMw.ThinkingModeCompleted
-	if err := protojson.Unmarshal(raw, &decoded); err != nil {
-		t.Fatalf("protojson.Unmarshal: %v", err)
+	var decoded semThinkingModeCompleted
+	if err := json.Unmarshal(raw, &decoded); err != nil {
+		t.Fatalf("json.Unmarshal: %v", err)
 	}
-	if decoded.ItemId != "item-1" || decoded.Data.GetMode() != "deep" || !decoded.Success {
+	if decoded.ItemID != "item-1" || decoded.Data.Mode != "deep" || !decoded.Success {
 		t.Fatalf("unexpected decoded payload: %#v", decoded)
 	}
 
@@ -56,4 +50,3 @@ func TestThinkingModeSemProtoRoundTrip(t *testing.T) {
 		t.Fatalf("expected sem envelope, got: %#v", envelope["sem"])
 	}
 }
-

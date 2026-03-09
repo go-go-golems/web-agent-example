@@ -3,10 +3,7 @@ package discodialogue
 import (
 	"encoding/json"
 
-	semMw "github.com/go-go-golems/pinocchio/pkg/sem/pb/proto/sem/middleware"
 	semregistry "github.com/go-go-golems/pinocchio/pkg/sem/registry"
-	"google.golang.org/protobuf/encoding/protojson"
-	"google.golang.org/protobuf/proto"
 )
 
 func init() {
@@ -15,8 +12,8 @@ func init() {
 
 func registerSemHandlers() {
 	semregistry.RegisterByType[*DialogueLineStartedEvent](func(ev *DialogueLineStartedEvent) ([][]byte, error) {
-		m := &semMw.DiscoDialogueLineStarted{ItemId: ev.ItemID, Data: linePayloadToProto(ev.Data)}
-		raw, err := protoToRaw(m)
+		m := &semDialogueLineStarted{ItemID: ev.ItemID, Data: linePayloadToSem(ev.Data)}
+		raw, err := marshalJSONRaw(m)
 		if err != nil {
 			return nil, err
 		}
@@ -24,8 +21,8 @@ func registerSemHandlers() {
 	})
 
 	semregistry.RegisterByType[*DialogueLineUpdateEvent](func(ev *DialogueLineUpdateEvent) ([][]byte, error) {
-		m := &semMw.DiscoDialogueLineUpdate{ItemId: ev.ItemID, Data: linePayloadToProto(ev.Data)}
-		raw, err := protoToRaw(m)
+		m := &semDialogueLineUpdate{ItemID: ev.ItemID, Data: linePayloadToSem(ev.Data)}
+		raw, err := marshalJSONRaw(m)
 		if err != nil {
 			return nil, err
 		}
@@ -33,8 +30,8 @@ func registerSemHandlers() {
 	})
 
 	semregistry.RegisterByType[*DialogueLineCompletedEvent](func(ev *DialogueLineCompletedEvent) ([][]byte, error) {
-		m := &semMw.DiscoDialogueLineCompleted{ItemId: ev.ItemID, Data: linePayloadToProto(ev.Data), Success: ev.Success, Error: ev.Error}
-		raw, err := protoToRaw(m)
+		m := &semDialogueLineCompleted{ItemID: ev.ItemID, Data: linePayloadToSem(ev.Data), Success: ev.Success, Error: ev.Error}
+		raw, err := marshalJSONRaw(m)
 		if err != nil {
 			return nil, err
 		}
@@ -42,8 +39,8 @@ func registerSemHandlers() {
 	})
 
 	semregistry.RegisterByType[*DialogueCheckStartedEvent](func(ev *DialogueCheckStartedEvent) ([][]byte, error) {
-		m := &semMw.DiscoDialogueCheckStarted{ItemId: ev.ItemID, Data: checkPayloadToProto(ev.Data)}
-		raw, err := protoToRaw(m)
+		m := &semDialogueCheckStarted{ItemID: ev.ItemID, Data: checkPayloadToSem(ev.Data)}
+		raw, err := marshalJSONRaw(m)
 		if err != nil {
 			return nil, err
 		}
@@ -51,8 +48,8 @@ func registerSemHandlers() {
 	})
 
 	semregistry.RegisterByType[*DialogueCheckUpdateEvent](func(ev *DialogueCheckUpdateEvent) ([][]byte, error) {
-		m := &semMw.DiscoDialogueCheckUpdate{ItemId: ev.ItemID, Data: checkPayloadToProto(ev.Data)}
-		raw, err := protoToRaw(m)
+		m := &semDialogueCheckUpdate{ItemID: ev.ItemID, Data: checkPayloadToSem(ev.Data)}
+		raw, err := marshalJSONRaw(m)
 		if err != nil {
 			return nil, err
 		}
@@ -60,8 +57,8 @@ func registerSemHandlers() {
 	})
 
 	semregistry.RegisterByType[*DialogueCheckCompletedEvent](func(ev *DialogueCheckCompletedEvent) ([][]byte, error) {
-		m := &semMw.DiscoDialogueCheckCompleted{ItemId: ev.ItemID, Data: checkPayloadToProto(ev.Data), Success: ev.Success, Error: ev.Error}
-		raw, err := protoToRaw(m)
+		m := &semDialogueCheckCompleted{ItemID: ev.ItemID, Data: checkPayloadToSem(ev.Data), Success: ev.Success, Error: ev.Error}
+		raw, err := marshalJSONRaw(m)
 		if err != nil {
 			return nil, err
 		}
@@ -69,8 +66,8 @@ func registerSemHandlers() {
 	})
 
 	semregistry.RegisterByType[*DialogueStateStartedEvent](func(ev *DialogueStateStartedEvent) ([][]byte, error) {
-		m := &semMw.DiscoDialogueStateStarted{ItemId: ev.ItemID, Data: statePayloadToProto(ev.Data)}
-		raw, err := protoToRaw(m)
+		m := &semDialogueStateStarted{ItemID: ev.ItemID, Data: statePayloadToSem(ev.Data)}
+		raw, err := marshalJSONRaw(m)
 		if err != nil {
 			return nil, err
 		}
@@ -78,8 +75,8 @@ func registerSemHandlers() {
 	})
 
 	semregistry.RegisterByType[*DialogueStateUpdateEvent](func(ev *DialogueStateUpdateEvent) ([][]byte, error) {
-		m := &semMw.DiscoDialogueStateUpdate{ItemId: ev.ItemID, Data: statePayloadToProto(ev.Data)}
-		raw, err := protoToRaw(m)
+		m := &semDialogueStateUpdate{ItemID: ev.ItemID, Data: statePayloadToSem(ev.Data)}
+		raw, err := marshalJSONRaw(m)
 		if err != nil {
 			return nil, err
 		}
@@ -87,8 +84,8 @@ func registerSemHandlers() {
 	})
 
 	semregistry.RegisterByType[*DialogueStateCompletedEvent](func(ev *DialogueStateCompletedEvent) ([][]byte, error) {
-		m := &semMw.DiscoDialogueStateCompleted{ItemId: ev.ItemID, Data: statePayloadToProto(ev.Data), Success: ev.Success, Error: ev.Error}
-		raw, err := protoToRaw(m)
+		m := &semDialogueStateCompleted{ItemID: ev.ItemID, Data: statePayloadToSem(ev.Data), Success: ev.Success, Error: ev.Error}
+		raw, err := marshalJSONRaw(m)
 		if err != nil {
 			return nil, err
 		}
@@ -96,13 +93,13 @@ func registerSemHandlers() {
 	})
 }
 
-func linePayloadToProto(p *DialogueLinePayload) *semMw.DiscoDialogueLinePayload {
+func linePayloadToSem(p *DialogueLinePayload) *semDialogueLinePayload {
 	if p == nil {
 		return nil
 	}
-	return &semMw.DiscoDialogueLinePayload{
-		DialogueId: p.DialogueID,
-		LineId:     p.LineID,
+	return &semDialogueLinePayload{
+		DialogueID: p.DialogueID,
+		LineID:     p.LineID,
 		Persona:    p.Persona,
 		Tone:       p.Tone,
 		Text:       p.Text,
@@ -112,27 +109,27 @@ func linePayloadToProto(p *DialogueLinePayload) *semMw.DiscoDialogueLinePayload 
 	}
 }
 
-func checkPayloadToProto(p *DialogueCheckPayload) *semMw.DiscoDialogueCheckPayload {
+func checkPayloadToSem(p *DialogueCheckPayload) *semDialogueCheckPayload {
 	if p == nil {
 		return nil
 	}
-	return &semMw.DiscoDialogueCheckPayload{
-		DialogueId: p.DialogueID,
-		LineId:     p.LineID,
+	return &semDialogueCheckPayload{
+		DialogueID: p.DialogueID,
+		LineID:     p.LineID,
 		CheckType:  p.CheckType,
 		Skill:      p.Skill,
-		Difficulty: int32(p.Difficulty),
-		Roll:       int32(p.Roll),
+		Difficulty: p.Difficulty,
+		Roll:       p.Roll,
 		Success:    p.Success,
 	}
 }
 
-func statePayloadToProto(p *DialogueStatePayload) *semMw.DiscoDialogueStatePayload {
+func statePayloadToSem(p *DialogueStatePayload) *semDialogueStatePayload {
 	if p == nil {
 		return nil
 	}
-	return &semMw.DiscoDialogueStatePayload{
-		DialogueId: p.DialogueID,
+	return &semDialogueStatePayload{
+		DialogueID: p.DialogueID,
 		Status:     p.Status,
 		Summary:    p.Summary,
 	}
@@ -143,13 +140,88 @@ func wrapSem(ev map[string]any) []byte {
 	return b
 }
 
-func protoToRaw(m proto.Message) (json.RawMessage, error) {
-	if m == nil {
-		return nil, nil
-	}
-	b, err := protojson.MarshalOptions{EmitUnpopulated: false, UseProtoNames: false}.Marshal(m)
+func marshalJSONRaw(v any) (json.RawMessage, error) {
+	b, err := json.Marshal(v)
 	if err != nil {
 		return nil, err
 	}
 	return json.RawMessage(b), nil
+}
+
+type semDialogueLinePayload struct {
+	DialogueID string  `json:"dialogueId,omitempty"`
+	LineID     string  `json:"lineId,omitempty"`
+	Persona    string  `json:"persona,omitempty"`
+	Tone       string  `json:"tone,omitempty"`
+	Text       string  `json:"text,omitempty"`
+	Trigger    string  `json:"trigger,omitempty"`
+	Progress   float64 `json:"progress,omitempty"`
+	Status     string  `json:"status,omitempty"`
+}
+
+type semDialogueCheckPayload struct {
+	DialogueID string `json:"dialogueId,omitempty"`
+	LineID     string `json:"lineId,omitempty"`
+	CheckType  string `json:"checkType,omitempty"`
+	Skill      string `json:"skill,omitempty"`
+	Difficulty int    `json:"difficulty,omitempty"`
+	Roll       int    `json:"roll,omitempty"`
+	Success    bool   `json:"success"`
+}
+
+type semDialogueStatePayload struct {
+	DialogueID string `json:"dialogueId,omitempty"`
+	Status     string `json:"status,omitempty"`
+	Summary    string `json:"summary,omitempty"`
+}
+
+type semDialogueLineStarted struct {
+	ItemID string                  `json:"itemId,omitempty"`
+	Data   *semDialogueLinePayload `json:"data,omitempty"`
+}
+
+type semDialogueLineUpdate struct {
+	ItemID string                  `json:"itemId,omitempty"`
+	Data   *semDialogueLinePayload `json:"data,omitempty"`
+}
+
+type semDialogueLineCompleted struct {
+	ItemID  string                  `json:"itemId,omitempty"`
+	Data    *semDialogueLinePayload `json:"data,omitempty"`
+	Success bool                    `json:"success"`
+	Error   string                  `json:"error,omitempty"`
+}
+
+type semDialogueCheckStarted struct {
+	ItemID string                   `json:"itemId,omitempty"`
+	Data   *semDialogueCheckPayload `json:"data,omitempty"`
+}
+
+type semDialogueCheckUpdate struct {
+	ItemID string                   `json:"itemId,omitempty"`
+	Data   *semDialogueCheckPayload `json:"data,omitempty"`
+}
+
+type semDialogueCheckCompleted struct {
+	ItemID  string                   `json:"itemId,omitempty"`
+	Data    *semDialogueCheckPayload `json:"data,omitempty"`
+	Success bool                     `json:"success"`
+	Error   string                   `json:"error,omitempty"`
+}
+
+type semDialogueStateStarted struct {
+	ItemID string                   `json:"itemId,omitempty"`
+	Data   *semDialogueStatePayload `json:"data,omitempty"`
+}
+
+type semDialogueStateUpdate struct {
+	ItemID string                   `json:"itemId,omitempty"`
+	Data   *semDialogueStatePayload `json:"data,omitempty"`
+}
+
+type semDialogueStateCompleted struct {
+	ItemID  string                   `json:"itemId,omitempty"`
+	Data    *semDialogueStatePayload `json:"data,omitempty"`
+	Success bool                     `json:"success"`
+	Error   string                   `json:"error,omitempty"`
 }

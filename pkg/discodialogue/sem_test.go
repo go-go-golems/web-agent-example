@@ -3,12 +3,11 @@ package discodialogue
 import (
 	"testing"
 
-	semMw "github.com/go-go-golems/pinocchio/pkg/sem/pb/proto/sem/middleware"
-	"google.golang.org/protobuf/encoding/protojson"
+	"encoding/json"
 )
 
 func TestDiscoDialogueLineSemProtoRoundTrip(t *testing.T) {
-	payload := linePayloadToProto(&DialogueLinePayload{
+	payload := linePayloadToSem(&DialogueLinePayload{
 		DialogueID: "dlg-1",
 		LineID:     "line-1",
 		Persona:    "Logic",
@@ -18,31 +17,31 @@ func TestDiscoDialogueLineSemProtoRoundTrip(t *testing.T) {
 		Progress:   0.5,
 		Status:     "update",
 	})
-	if payload.DialogueId != "dlg-1" || payload.LineId != "line-1" || payload.Persona != "Logic" {
+	if payload.DialogueID != "dlg-1" || payload.LineID != "line-1" || payload.Persona != "Logic" {
 		t.Fatalf("unexpected line payload: %#v", payload)
 	}
 
-	msg := &semMw.DiscoDialogueLineCompleted{
-		ItemId:  "line-item-1",
+	msg := &semDialogueLineCompleted{
+		ItemID:  "line-item-1",
 		Data:    payload,
 		Success: true,
 	}
-	raw, err := protoToRaw(msg)
+	raw, err := marshalJSONRaw(msg)
 	if err != nil {
-		t.Fatalf("protoToRaw: %v", err)
+		t.Fatalf("marshalJSONRaw: %v", err)
 	}
 
-	var decoded semMw.DiscoDialogueLineCompleted
-	if err := protojson.Unmarshal(raw, &decoded); err != nil {
-		t.Fatalf("protojson.Unmarshal: %v", err)
+	var decoded semDialogueLineCompleted
+	if err := json.Unmarshal(raw, &decoded); err != nil {
+		t.Fatalf("json.Unmarshal: %v", err)
 	}
-	if decoded.ItemId != "line-item-1" || decoded.Data.GetDialogueId() != "dlg-1" || decoded.Data.GetPersona() != "Logic" {
+	if decoded.ItemID != "line-item-1" || decoded.Data.DialogueID != "dlg-1" || decoded.Data.Persona != "Logic" {
 		t.Fatalf("unexpected decoded line payload: %#v", decoded)
 	}
 }
 
 func TestDiscoDialogueCheckSemProtoRoundTrip(t *testing.T) {
-	payload := checkPayloadToProto(&DialogueCheckPayload{
+	payload := checkPayloadToSem(&DialogueCheckPayload{
 		DialogueID: "dlg-1",
 		LineID:     "line-2",
 		CheckType:  "active",
@@ -55,23 +54,22 @@ func TestDiscoDialogueCheckSemProtoRoundTrip(t *testing.T) {
 		t.Fatalf("unexpected check payload: %#v", payload)
 	}
 
-	msg := &semMw.DiscoDialogueCheckCompleted{
-		ItemId:  "check-item-1",
+	msg := &semDialogueCheckCompleted{
+		ItemID:  "check-item-1",
 		Data:    payload,
 		Success: false,
 		Error:   "missed threshold",
 	}
-	raw, err := protoToRaw(msg)
+	raw, err := marshalJSONRaw(msg)
 	if err != nil {
-		t.Fatalf("protoToRaw: %v", err)
+		t.Fatalf("marshalJSONRaw: %v", err)
 	}
 
-	var decoded semMw.DiscoDialogueCheckCompleted
-	if err := protojson.Unmarshal(raw, &decoded); err != nil {
-		t.Fatalf("protojson.Unmarshal: %v", err)
+	var decoded semDialogueCheckCompleted
+	if err := json.Unmarshal(raw, &decoded); err != nil {
+		t.Fatalf("json.Unmarshal: %v", err)
 	}
-	if decoded.ItemId != "check-item-1" || decoded.Data.GetSkill() != "volition" || decoded.Success {
+	if decoded.ItemID != "check-item-1" || decoded.Data.Skill != "volition" || decoded.Success {
 		t.Fatalf("unexpected decoded check payload: %#v", decoded)
 	}
 }
-
