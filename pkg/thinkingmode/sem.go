@@ -3,11 +3,7 @@ package thinkingmode
 import (
 	"encoding/json"
 
-	semMw "github.com/go-go-golems/pinocchio/pkg/sem/pb/proto/sem/middleware"
 	semregistry "github.com/go-go-golems/pinocchio/pkg/sem/registry"
-	"google.golang.org/protobuf/encoding/protojson"
-	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/types/known/structpb"
 )
 
 func init() {
@@ -16,12 +12,8 @@ func init() {
 
 func registerSemHandlers() {
 	semregistry.RegisterByType[*EventThinkingModeStarted](func(ev *EventThinkingModeStarted) ([][]byte, error) {
-		data, err := payloadToProto(ev.Data)
-		if err != nil {
-			return nil, err
-		}
-		m := &semMw.ThinkingModeStarted{ItemId: ev.ItemID, Data: data}
-		raw, err := protoToRaw(m)
+		m := &semThinkingModeStarted{ItemID: ev.ItemID, Data: semPayloadFromEventData(ev.Data)}
+		raw, err := marshalJSONRaw(m)
 		if err != nil {
 			return nil, err
 		}
@@ -29,12 +21,8 @@ func registerSemHandlers() {
 	})
 
 	semregistry.RegisterByType[*EventThinkingModeUpdate](func(ev *EventThinkingModeUpdate) ([][]byte, error) {
-		data, err := payloadToProto(ev.Data)
-		if err != nil {
-			return nil, err
-		}
-		m := &semMw.ThinkingModeUpdate{ItemId: ev.ItemID, Data: data}
-		raw, err := protoToRaw(m)
+		m := &semThinkingModeUpdate{ItemID: ev.ItemID, Data: semPayloadFromEventData(ev.Data)}
+		raw, err := marshalJSONRaw(m)
 		if err != nil {
 			return nil, err
 		}
@@ -42,12 +30,13 @@ func registerSemHandlers() {
 	})
 
 	semregistry.RegisterByType[*EventThinkingModeCompleted](func(ev *EventThinkingModeCompleted) ([][]byte, error) {
-		data, err := payloadToProto(ev.Data)
-		if err != nil {
-			return nil, err
+		m := &semThinkingModeCompleted{
+			ItemID:  ev.ItemID,
+			Data:    semPayloadFromEventData(ev.Data),
+			Success: ev.Success,
+			Error:   ev.Error,
 		}
-		m := &semMw.ThinkingModeCompleted{ItemId: ev.ItemID, Data: data, Success: ev.Success, Error: ev.Error}
-		raw, err := protoToRaw(m)
+		raw, err := marshalJSONRaw(m)
 		if err != nil {
 			return nil, err
 		}
@@ -55,24 +44,16 @@ func registerSemHandlers() {
 	})
 }
 
-func payloadToProto(p *Payload) (*semMw.ThinkingModePayload, error) {
+func semPayloadFromEventData(p *Payload) *semThinkingModePayload {
 	if p == nil {
-		return nil, nil
+		return nil
 	}
-	var extra *structpb.Struct
-	if len(p.ExtraData) > 0 {
-		st, err := structpb.NewStruct(p.ExtraData)
-		if err != nil {
-			return nil, err
-		}
-		extra = st
-	}
-	return &semMw.ThinkingModePayload{
+	return &semThinkingModePayload{
 		Mode:      p.Mode,
 		Phase:     p.Phase,
 		Reasoning: p.Reasoning,
-		ExtraData: extra,
-	}, nil
+		ExtraData: cloneExtraData(p.ExtraData),
+	}
 }
 
 func wrapSem(ev map[string]any) []byte {
@@ -80,16 +61,45 @@ func wrapSem(ev map[string]any) []byte {
 	return b
 }
 
-func protoToRaw(m proto.Message) (json.RawMessage, error) {
-	if m == nil {
-		return nil, nil
-	}
-	b, err := protojson.MarshalOptions{
-		EmitUnpopulated: false,
-		UseProtoNames:   false,
-	}.Marshal(m)
+func marshalJSONRaw(v any) (json.RawMessage, error) {
+	b, err := json.Marshal(v)
 	if err != nil {
 		return nil, err
 	}
 	return json.RawMessage(b), nil
+}
+
+func cloneExtraData(in map[string]any) map[string]any {
+	if len(in) == 0 {
+		return nil
+	}
+	out := make(map[string]any, len(in))
+	for k, v := range in {
+		out[k] = v
+	}
+	return out
+}
+
+type semThinkingModePayload struct {
+	Mode      string         `json:"mode,omitempty"`
+	Phase     string         `json:"phase,omitempty"`
+	Reasoning string         `json:"reasoning,omitempty"`
+	ExtraData map[string]any `json:"extraData,omitempty"`
+}
+
+type semThinkingModeStarted struct {
+	ItemID string                  `json:"itemId,omitempty"`
+	Data   *semThinkingModePayload `json:"data,omitempty"`
+}
+
+type semThinkingModeUpdate struct {
+	ItemID string                  `json:"itemId,omitempty"`
+	Data   *semThinkingModePayload `json:"data,omitempty"`
+}
+
+type semThinkingModeCompleted struct {
+	ItemID  string                  `json:"itemId,omitempty"`
+	Data    *semThinkingModePayload `json:"data,omitempty"`
+	Success bool                    `json:"success"`
+	Error   string                  `json:"error,omitempty"`
 }

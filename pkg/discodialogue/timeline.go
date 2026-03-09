@@ -2,12 +2,12 @@ package discodialogue
 
 import (
 	"context"
+	"encoding/json"
 	"strings"
 
-	semMw "github.com/go-go-golems/pinocchio/pkg/sem/pb/proto/sem/middleware"
 	timelinepb "github.com/go-go-golems/pinocchio/pkg/sem/pb/proto/sem/timeline"
 	"github.com/go-go-golems/pinocchio/pkg/webchat"
-	"google.golang.org/protobuf/encoding/protojson"
+	"google.golang.org/protobuf/types/known/structpb"
 )
 
 const (
@@ -61,29 +61,22 @@ func upsertDialogueLine(ctx context.Context, p *webchat.TimelineProjector, ev we
 		return nil
 	}
 	if payload == nil {
-		payload = &semMw.DiscoDialogueLinePayload{}
+		payload = &semDialogueLinePayload{}
 	}
 
-	entity := &timelinepb.TimelineEntityV1{
-		Id:   itemID,
-		Kind: TimelineKindLine,
-		Snapshot: &timelinepb.TimelineEntityV1_DiscoDialogueLine{
-			DiscoDialogueLine: &timelinepb.DiscoDialogueLineSnapshotV1{
-				SchemaVersion: 1,
-				Status:        status,
-				DialogueId:    payload.DialogueId,
-				LineId:        payload.LineId,
-				Persona:       payload.Persona,
-				Tone:          payload.Tone,
-				Text:          payload.Text,
-				Trigger:       payload.Trigger,
-				Progress:      payload.Progress,
-				Success:       success,
-				Error:         errStr,
-			},
-		},
-	}
-	return p.Upsert(ctx, ev.Seq, entity)
+	return p.Upsert(ctx, ev.Seq, timelineEntityFromMap(itemID, TimelineKindLine, map[string]any{
+		"schemaVersion": 1,
+		"status":        status,
+		"dialogueId":    payload.DialogueID,
+		"lineId":        payload.LineID,
+		"persona":       payload.Persona,
+		"tone":          payload.Tone,
+		"text":          payload.Text,
+		"trigger":       payload.Trigger,
+		"progress":      payload.Progress,
+		"success":       success,
+		"error":         errStr,
+	}))
 }
 
 func upsertDialogueCheck(ctx context.Context, p *webchat.TimelineProjector, ev webchat.TimelineSemEvent) error {
@@ -95,28 +88,21 @@ func upsertDialogueCheck(ctx context.Context, p *webchat.TimelineProjector, ev w
 		return nil
 	}
 	if payload == nil {
-		payload = &semMw.DiscoDialogueCheckPayload{}
+		payload = &semDialogueCheckPayload{}
 	}
 
-	entity := &timelinepb.TimelineEntityV1{
-		Id:   itemID,
-		Kind: TimelineKindCheck,
-		Snapshot: &timelinepb.TimelineEntityV1_DiscoDialogueCheck{
-			DiscoDialogueCheck: &timelinepb.DiscoDialogueCheckSnapshotV1{
-				SchemaVersion: 1,
-				Status:        status,
-				DialogueId:    payload.DialogueId,
-				LineId:        payload.LineId,
-				CheckType:     payload.CheckType,
-				Skill:         payload.Skill,
-				Difficulty:    payload.Difficulty,
-				Roll:          payload.Roll,
-				Success:       success,
-				Error:         errStr,
-			},
-		},
-	}
-	return p.Upsert(ctx, ev.Seq, entity)
+	return p.Upsert(ctx, ev.Seq, timelineEntityFromMap(itemID, TimelineKindCheck, map[string]any{
+		"schemaVersion": 1,
+		"status":        status,
+		"dialogueId":    payload.DialogueID,
+		"lineId":        payload.LineID,
+		"checkType":     payload.CheckType,
+		"skill":         payload.Skill,
+		"difficulty":    payload.Difficulty,
+		"roll":          payload.Roll,
+		"success":       success,
+		"error":         errStr,
+	}))
 }
 
 func upsertDialogueState(ctx context.Context, p *webchat.TimelineProjector, ev webchat.TimelineSemEvent) error {
@@ -128,106 +114,111 @@ func upsertDialogueState(ctx context.Context, p *webchat.TimelineProjector, ev w
 		return nil
 	}
 	if payload == nil {
-		payload = &semMw.DiscoDialogueStatePayload{}
+		payload = &semDialogueStatePayload{}
 	}
 
-	entity := &timelinepb.TimelineEntityV1{
-		Id:   itemID,
-		Kind: TimelineKindState,
-		Snapshot: &timelinepb.TimelineEntityV1_DiscoDialogueState{
-			DiscoDialogueState: &timelinepb.DiscoDialogueStateSnapshotV1{
-				SchemaVersion: 1,
-				Status:        status,
-				DialogueId:    payload.DialogueId,
-				Summary:       payload.Summary,
-				Success:       success,
-				Error:         errStr,
-			},
-		},
-	}
-	return p.Upsert(ctx, ev.Seq, entity)
+	return p.Upsert(ctx, ev.Seq, timelineEntityFromMap(itemID, TimelineKindState, map[string]any{
+		"schemaVersion": 1,
+		"status":        status,
+		"dialogueId":    payload.DialogueID,
+		"summary":       payload.Summary,
+		"success":       success,
+		"error":         errStr,
+	}))
 }
 
-func decodeLineEvent(ev webchat.TimelineSemEvent) (string, *semMw.DiscoDialogueLinePayload, string, bool, string) {
+func decodeLineEvent(ev webchat.TimelineSemEvent) (string, *semDialogueLinePayload, string, bool, string) {
 	switch ev.Type {
 	case string(EventDialogueLineStarted):
-		var pb semMw.DiscoDialogueLineStarted
-		if err := protojson.Unmarshal(ev.Data, &pb); err != nil {
+		var pb semDialogueLineStarted
+		if err := json.Unmarshal(ev.Data, &pb); err != nil {
 			return "", nil, "", false, ""
 		}
-		return pb.ItemId, pb.Data, "started", true, ""
+		return pb.ItemID, pb.Data, "started", true, ""
 	case string(EventDialogueLineUpdate):
-		var pb semMw.DiscoDialogueLineUpdate
-		if err := protojson.Unmarshal(ev.Data, &pb); err != nil {
+		var pb semDialogueLineUpdate
+		if err := json.Unmarshal(ev.Data, &pb); err != nil {
 			return "", nil, "", false, ""
 		}
-		return pb.ItemId, pb.Data, "update", true, ""
+		return pb.ItemID, pb.Data, "update", true, ""
 	case string(EventDialogueLineCompleted):
-		var pb semMw.DiscoDialogueLineCompleted
-		if err := protojson.Unmarshal(ev.Data, &pb); err != nil {
+		var pb semDialogueLineCompleted
+		if err := json.Unmarshal(ev.Data, &pb); err != nil {
 			return "", nil, "", false, ""
 		}
 		status := "completed"
 		if !pb.Success || strings.TrimSpace(pb.Error) != "" {
 			status = "error"
 		}
-		return pb.ItemId, pb.Data, status, pb.Success, pb.Error
+		return pb.ItemID, pb.Data, status, pb.Success, pb.Error
 	}
 	return "", nil, "", false, ""
 }
 
-func decodeCheckEvent(ev webchat.TimelineSemEvent) (string, *semMw.DiscoDialogueCheckPayload, string, bool, string) {
+func decodeCheckEvent(ev webchat.TimelineSemEvent) (string, *semDialogueCheckPayload, string, bool, string) {
 	switch ev.Type {
 	case string(EventDialogueCheckStarted):
-		var pb semMw.DiscoDialogueCheckStarted
-		if err := protojson.Unmarshal(ev.Data, &pb); err != nil {
+		var pb semDialogueCheckStarted
+		if err := json.Unmarshal(ev.Data, &pb); err != nil {
 			return "", nil, "", false, ""
 		}
-		return pb.ItemId, pb.Data, "started", true, ""
+		return pb.ItemID, pb.Data, "started", true, ""
 	case string(EventDialogueCheckUpdate):
-		var pb semMw.DiscoDialogueCheckUpdate
-		if err := protojson.Unmarshal(ev.Data, &pb); err != nil {
+		var pb semDialogueCheckUpdate
+		if err := json.Unmarshal(ev.Data, &pb); err != nil {
 			return "", nil, "", false, ""
 		}
-		return pb.ItemId, pb.Data, "update", true, ""
+		return pb.ItemID, pb.Data, "update", true, ""
 	case string(EventDialogueCheckCompleted):
-		var pb semMw.DiscoDialogueCheckCompleted
-		if err := protojson.Unmarshal(ev.Data, &pb); err != nil {
+		var pb semDialogueCheckCompleted
+		if err := json.Unmarshal(ev.Data, &pb); err != nil {
 			return "", nil, "", false, ""
 		}
 		status := "completed"
 		if !pb.Success || strings.TrimSpace(pb.Error) != "" {
 			status = "error"
 		}
-		return pb.ItemId, pb.Data, status, pb.Success, pb.Error
+		return pb.ItemID, pb.Data, status, pb.Success, pb.Error
 	}
 	return "", nil, "", false, ""
 }
 
-func decodeStateEvent(ev webchat.TimelineSemEvent) (string, *semMw.DiscoDialogueStatePayload, string, bool, string) {
+func decodeStateEvent(ev webchat.TimelineSemEvent) (string, *semDialogueStatePayload, string, bool, string) {
 	switch ev.Type {
 	case string(EventDialogueStateStarted):
-		var pb semMw.DiscoDialogueStateStarted
-		if err := protojson.Unmarshal(ev.Data, &pb); err != nil {
+		var pb semDialogueStateStarted
+		if err := json.Unmarshal(ev.Data, &pb); err != nil {
 			return "", nil, "", false, ""
 		}
-		return pb.ItemId, pb.Data, "started", true, ""
+		return pb.ItemID, pb.Data, "started", true, ""
 	case string(EventDialogueStateUpdate):
-		var pb semMw.DiscoDialogueStateUpdate
-		if err := protojson.Unmarshal(ev.Data, &pb); err != nil {
+		var pb semDialogueStateUpdate
+		if err := json.Unmarshal(ev.Data, &pb); err != nil {
 			return "", nil, "", false, ""
 		}
-		return pb.ItemId, pb.Data, "update", true, ""
+		return pb.ItemID, pb.Data, "update", true, ""
 	case string(EventDialogueStateCompleted):
-		var pb semMw.DiscoDialogueStateCompleted
-		if err := protojson.Unmarshal(ev.Data, &pb); err != nil {
+		var pb semDialogueStateCompleted
+		if err := json.Unmarshal(ev.Data, &pb); err != nil {
 			return "", nil, "", false, ""
 		}
 		status := "completed"
 		if !pb.Success || strings.TrimSpace(pb.Error) != "" {
 			status = "error"
 		}
-		return pb.ItemId, pb.Data, status, pb.Success, pb.Error
+		return pb.ItemID, pb.Data, status, pb.Success, pb.Error
 	}
 	return "", nil, "", false, ""
+}
+
+func timelineEntityFromMap(id, kind string, props map[string]any) *timelinepb.TimelineEntityV2 {
+	st, err := structpb.NewStruct(props)
+	if err != nil {
+		st = &structpb.Struct{Fields: map[string]*structpb.Value{}}
+	}
+	return &timelinepb.TimelineEntityV2{
+		Id:    strings.TrimSpace(id),
+		Kind:  strings.TrimSpace(kind),
+		Props: st,
+	}
 }
