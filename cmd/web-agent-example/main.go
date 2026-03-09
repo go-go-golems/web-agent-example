@@ -94,13 +94,16 @@ func (c *Command) RunIntoWriter(ctx context.Context, parsed *values.Values, _ io
 		requestResolver,
 		websocket.Upgrader{CheckOrigin: func(*http.Request) bool { return true }},
 	)
+	apiHandler := srv.APIHandler()
+	uiHandler := srv.UIHandler()
 
 	appMux := http.NewServeMux()
 	appMux.HandleFunc("/chat", chatHandler)
 	appMux.HandleFunc("/chat/", chatHandler)
 	appMux.HandleFunc("/ws", wsHandler)
-	appMux.Handle("/api/", srv.APIHandler())
-	appMux.Handle("/", srv.UIHandler())
+	appMux.Handle("/api/", apiHandler)
+	registerLegacyAPIAliases(appMux, apiHandler)
+	appMux.Handle("/", uiHandler)
 
 	httpSrv := srv.HTTPServer()
 	if httpSrv == nil {
@@ -123,6 +126,38 @@ func (c *Command) RunIntoWriter(ctx context.Context, parsed *values.Values, _ io
 	}
 
 	return srv.Run(ctx)
+}
+
+func registerLegacyAPIAliases(mux *http.ServeMux, apiHandler http.Handler) {
+	if mux == nil || apiHandler == nil {
+		return
+	}
+
+	// Preserve legacy backend paths that local debug tooling still requests directly.
+	mux.Handle("/debug", rewritePathPrefix("/debug", "/api/debug", apiHandler))
+	mux.Handle("/debug/", rewritePathPrefix("/debug/", "/api/debug/", apiHandler))
+	mux.Handle("/timeline", rewritePathPrefix("/timeline", "/api/timeline", apiHandler))
+	mux.Handle("/timeline/", rewritePathPrefix("/timeline/", "/api/timeline/", apiHandler))
+	mux.Handle("/turns", rewritePathPrefix("/turns", "/api/debug/turns", apiHandler))
+	mux.Handle("/turns/", rewritePathPrefix("/turns/", "/api/debug/turns/", apiHandler))
+}
+
+func rewritePathPrefix(from, to string, next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if next == nil || r == nil || r.URL == nil {
+			http.NotFound(w, r)
+			return
+		}
+
+		rr := r.Clone(r.Context())
+		u := *r.URL
+		rr.URL = &u
+		rr.URL.Path = to + strings.TrimPrefix(r.URL.Path, from)
+		if r.URL.RawPath != "" {
+			rr.URL.RawPath = to + strings.TrimPrefix(r.URL.RawPath, from)
+		}
+		next.ServeHTTP(w, rr)
+	})
 }
 
 func main() {
