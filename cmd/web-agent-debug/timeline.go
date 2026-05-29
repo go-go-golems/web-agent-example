@@ -1,3 +1,4 @@
+//glazedclilint:file-ignore legacy debug Cobra command uses raw flags; migrate to Glazed fields in a follow-up
 package main
 
 import (
