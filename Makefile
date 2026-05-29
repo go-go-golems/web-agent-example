@@ -65,3 +65,11 @@ WEB_AGENT_EXAMPLE_BINARY=$(shell which web-agent-example)
 install:
 	GOWORK=off go build -o ./dist/web-agent-example ./cmd/web-agent-example && \
 		cp ./dist/web-agent-example $(WEB_AGENT_EXAMPLE_BINARY)
+
+.PHONY: logcopter-generate
+logcopter-generate:
+	GOWORK=off go tool logcopter-gen -include-main -var zlog -area-prefix go-go-golems.web-agent-example -strip-prefix github.com/go-go-golems/web-agent-example ./cmd/... ./pkg/...
+
+.PHONY: logcopter-check
+logcopter-check:
+	GOWORK=off go tool logcopter-gen -include-main -var zlog -area-prefix go-go-golems.web-agent-example -strip-prefix github.com/go-go-golems/web-agent-example -check ./cmd/... ./pkg/...
